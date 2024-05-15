@@ -22,6 +22,7 @@ public class Point {
 	
     public Point add(Vector vec) { 
         return new Point(this.xyz.add(vec.xyz));
+        
     }
 		   
 	public double distanceSquared(Point p) {
