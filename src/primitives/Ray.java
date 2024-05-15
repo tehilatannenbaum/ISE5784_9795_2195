@@ -1,0 +1,25 @@
+package primitives;
+
+public class Ray {
+	private final Point head;
+	private final Vector direction;
+	
+	public Ray(Point p, Vector vec) {
+		head = p;
+		direction = vec.normalize();		
+	}
+	
+	 @Override
+	 public boolean equals(Object obj) {
+	 if (this == obj) return true;
+	 return (obj instanceof Ray other)
+	 && this.head.equals(other.head) &&
+	 this.direction.equals(other.direction) ;
+	 }
+	 
+	 @Override
+	   public String toString() { return "Ray: " + head.toString() + direction.toString();}
+
+
+
+}
