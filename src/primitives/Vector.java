@@ -7,113 +7,131 @@ import static java.lang.Math.sqrt;
  */
 public class Vector extends Point {
 
-    /**
-     * Constructs a new Vector with the specified coordinates.
-     * @param d1 The x-coordinate of the vector
-     * @param d2 The y-coordinate of the vector
-     * @param d3 The z-coordinate of the vector
-     * @throws IllegalArgumentException if the vector is zero (all coordinates are zero)
-     */
-    public Vector(double d1, double d2, double d3) {
-        super(d1, d2, d3); 
-        if (xyz.equals(Double3.ZERO))
-            throw new IllegalArgumentException("Vector can't be zero");
-    }
-    
-    /**
-     * Constructs a new Vector from a Double3 object representing its coordinates.
-     * @param d The Double3 object containing the coordinates of the vector
-     * @throws IllegalArgumentException if the vector is zero (all coordinates are zero)
-     */
-    public Vector(Double3 d) {
-        super(d); 
-        if (xyz.equals(Double3.ZERO))
-            throw new IllegalArgumentException("Vector can't be zero");
-    }
-    
-    /**
-     * Adds another vector to this vector, producing a new vector.
-     * @param vec The vector to add
-     * @return A new vector that is the result of adding the specified vector to this vector
-     */
-    public Vector add(Vector vec) {
-        return new Vector(this.xyz.add(vec.xyz));
-    }
+	/**
+	 * Constructs a new Vector with the specified coordinates.
+	 * 
+	 * @param d1 The x-coordinate of the vector
+	 * @param d2 The y-coordinate of the vector
+	 * @param d3 The z-coordinate of the vector
+	 * @throws IllegalArgumentException if the vector is zero (all coordinates are
+	 *                                  zero)
+	 */
+	public Vector(double d1, double d2, double d3) {
+		super(d1, d2, d3);
+		if (xyz.equals(Double3.ZERO))
+			throw new IllegalArgumentException("Vector can't be zero");
+	}
 
-    /**
-     * Scales this vector by a scalar value, producing a new vector.
-     * @param scalar The scalar value to scale the vector by
-     * @return A new vector that is the result of scaling this vector by the specified scalar value
-     */
-    public Vector scale(double scalar) {
-        return new Vector(this.xyz.scale(scalar));
-    }
+	/**
+	 * Constructs a new Vector from a Double3 object representing its coordinates.
+	 * 
+	 * @param d The Double3 object containing the coordinates of the vector
+	 * @throws IllegalArgumentException if the vector is zero (all coordinates are
+	 *                                  zero)
+	 */
+	public Vector(Double3 d) {
+		super(d);
+		if (xyz.equals(Double3.ZERO))
+			throw new IllegalArgumentException("Vector can't be zero");
+	}
 
-    /**
-     * Computes the dot product of this vector with another vector.
-     * @param vec The vector to compute the dot product with
-     * @return The dot product of this vector with the specified vector
-     */
-    public double dotProduct(Vector vec) {
-        return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
-    }
+	/**
+	 * Adds another vector to this vector, producing a new vector.
+	 * 
+	 * @param vec The vector to add
+	 * @return A new vector that is the result of adding the specified vector to
+	 *         this vector
+	 */
+	public Vector add(Vector vec) {
+		return new Vector(this.xyz.add(vec.xyz));
+	}
 
-    /**
-     * Computes the cross product of this vector with another vector.
-     * @param vec The vector to compute the cross product with
-     * @return A new vector that is the result of the cross product between this vector and the specified vector
-     */
-    public Vector crossProduct(Vector vec) {
-        return new Vector(
-            (this.xyz.d2 * vec.xyz.d3) - (this.xyz.d3 * vec.xyz.d2),
-            (this.xyz.d3 * vec.xyz.d1) - (this.xyz.d1 * vec.xyz.d3),
-            (this.xyz.d1 * vec.xyz.d2) - (this.xyz.d2 * vec.xyz.d1)
-        );
-    }
+	/**
+	 * Scales this vector by a scalar value, producing a new vector.
+	 * 
+	 * @param scalar The scalar value to scale the vector by
+	 * @return A new vector that is the result of scaling this vector by the
+	 *         specified scalar value
+	 */
+	public Vector scale(double scalar) {
+		return new Vector(this.xyz.scale(scalar));
+	}
 
-    /**
-     * Computes the squared length of this vector.
-     * @return The squared length of this vector
-     */
-    public double lengthSquared() {
-        return this.dotProduct(this);
-    }
+	/**
+	 * Computes the dot product of this vector with another vector.
+	 * 
+	 * @param vec The vector to compute the dot product with
+	 * @return The dot product of this vector with the specified vector
+	 */
+	public double dotProduct(Vector vec) {
+		return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
+	}
 
-    /**
-     * Computes the length of this vector.
-     * @return The length of this vector
-     */
-    public double length() {
-        return sqrt(this.lengthSquared());
-    }
+	/**
+	 * Computes the cross product of this vector with another vector.
+	 * 
+	 * @param vec The vector to compute the cross product with
+	 * @return A new vector that is the result of the cross product between this
+	 *         vector and the specified vector
+	 */
+	public Vector crossProduct(Vector vec) {
+		return new Vector( //
+				(this.xyz.d2 * vec.xyz.d3) - (this.xyz.d3 * vec.xyz.d2), //
+				(this.xyz.d3 * vec.xyz.d1) - (this.xyz.d1 * vec.xyz.d3), //
+				(this.xyz.d1 * vec.xyz.d2) - (this.xyz.d2 * vec.xyz.d1));
+	}
 
-    /**
-     * Normalizes this vector (converts it to a unit vector), producing a new vector.
-     * @return A new vector that is the normalized version of this vector
-     */
-    public Vector normalize() {
-        double length = length();
-        return new Vector(xyz.d1 / length, xyz.d2 / length, xyz.d3 / length);
-    }
+	/**
+	 * Computes the squared length of this vector.
+	 * 
+	 * @return The squared length of this vector
+	 */
+	public double lengthSquared() {
+		return this.dotProduct(this);
+	}
 
-    /**
-     * Checks whether this vector is equal to another object.
-     * Two vectors are considered equal if they have the same coordinates.
-     * @param obj The object to compare with this vector
-     * @return true if the given object is equal to this vector, false otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
+	/**
+	 * Computes the length of this vector.
+	 * 
+	 * @return The length of this vector
+	 */
+	public double length() {
+		return sqrt(this.lengthSquared());
+	}
 
-    /**
-     * Returns a string representation of this vector.
-     * The string representation contains the label "Vector:" followed by the coordinates of the vector.
-     * @return A string representation of this vector
-     */
-    @Override
-    public String toString() {
-        return "Vector: " + super.toString();
-    }
+	/**
+	 * Normalizes this vector (converts it to a unit vector), producing a new
+	 * vector.
+	 * 
+	 * @return A new vector that is the normalized version of this vector
+	 */
+	public Vector normalize() {
+		double length = length();
+		return new Vector(xyz.d1 / length, xyz.d2 / length, xyz.d3 / length);
+	}
+
+	/**
+	 * Checks whether this vector is equal to another object. Two vectors are
+	 * considered equal if they have the same coordinates.
+	 * 
+	 * @param obj The object to compare with this vector
+	 * @return true if the given object is equal to this vector, false otherwise
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		return super.equals(obj);
+	}
+
+	/**
+	 * Returns a string representation of this vector. The string representation
+	 * contains the label "Vector:" followed by the coordinates of the vector.
+	 * 
+	 * @return A string representation of this vector
+	 */
+	@Override
+	public String toString() {
+		return "v" + super.toString();
+	}
 }
