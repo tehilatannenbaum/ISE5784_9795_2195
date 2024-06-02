@@ -22,7 +22,7 @@ public class Plane implements Geometry {
 	 * @param p2 The second point on the plane
 	 * @param p3 The third point on the plane
 	 */
-	protected Plane(Point p1, Point p2, Point p3) {
+	public Plane(Point p1, Point p2, Point p3) {
 		normalize = null; // Not used in this constructor
 		this.p = p1; // Choose any of the three points as the reference point
 	}
@@ -54,6 +54,7 @@ public class Plane implements Geometry {
 	 * 
 	 * @return The normalized normal vector to the plane
 	 */
+
 	public Vector getNormal() {
 		return normalize; // Returns the normalized normal vector
 	}

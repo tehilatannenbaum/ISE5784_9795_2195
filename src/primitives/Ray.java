@@ -9,6 +9,13 @@ public class Ray {
 	private final Point head;
 	/** The direction vector of the ray */
 	private final Vector direction;
+	public Point getHead() {
+        return head;
+    }
+
+    public Vector getDirection() {
+        return direction;
+    }
 
 	/**
 	 * Constructs a new Ray with the given starting point and direction vector.

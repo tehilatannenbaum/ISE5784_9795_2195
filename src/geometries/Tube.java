@@ -20,9 +20,9 @@ public class Tube extends RadialGeometry {
 	 * @param _axis  The axis of the tube
 	 * @param radius The radius of the tube
 	 */
-	protected Tube(Ray _axis, double radius) {
+	public Tube(Ray axis, double radius) {
 		super(radius); // Call the constructor of the superclass RadialGeometry
-		axis = _axis;
+		this.axis = axis;
 	}
 
 	/**
@@ -34,6 +34,14 @@ public class Tube extends RadialGeometry {
 	 */
 	@Override
 	public Vector getNormal(Point p) {
-		return null;
+	Point head = axis.getHead();
+	    Vector dir = axis.getDirection();
+	    // Calculate the projection of p-head on the direction vector dir
+	    Vector headToP = p.subtract(head);
+	    double length = dir.dotProduct(headToP);
+	    // Calculate the point O on the axis closest to point p
+	    Point closestPoint = head.add(dir.scale(length));
+	    // Calculate the normal vector from O to p and normalize it
+	    return p.subtract(closestPoint).normalize();
 	}
 }

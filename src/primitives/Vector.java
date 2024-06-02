@@ -43,6 +43,7 @@ public class Vector extends Point {
 	 *         this vector
 	 */
 	public Vector add(Vector vec) {
+		
 		return new Vector(this.xyz.add(vec.xyz));
 	}
 
@@ -54,7 +55,10 @@ public class Vector extends Point {
 	 *         specified scalar value
 	 */
 	public Vector scale(double scalar) {
-		return new Vector(this.xyz.scale(scalar));
+		if (scalar == 0) {
+            throw new IllegalArgumentException("Scaling factor cannot be zero");
+        }
+        return new Vector(this.xyz.d1 * scalar, this.xyz.d2 * scalar, this.xyz.d3 * scalar);
 	}
 
 	/**

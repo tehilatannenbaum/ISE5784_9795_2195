@@ -3,6 +3,7 @@ package geometries;
 import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
+import primitives.Util;
 
 /**
  * Represents a cylinder in 3D space. A cylinder is defined by its axis, radius,
@@ -22,7 +23,7 @@ public class Cylinder extends Tube {
 	 * @param radius The radius of the cylinder
 	 * @param height The height of the cylinder
 	 */
-	protected Cylinder(Ray axis, double radius, double height) {
+	public Cylinder(Ray axis, double radius, double height) {
 		super(axis, radius);
 		this.height = height;
 	}
@@ -36,6 +37,20 @@ public class Cylinder extends Tube {
 	 */
 	@Override
 	public Vector getNormal(Point p) {
-		return null; // TODO Not implemented yet
+	Point head = axis.getHead();
+	        Vector dir = axis.getDirection();
+	        // Calculate projection of p-head on the direction vector
+	        double length = dir.dotProduct(p.subtract(head));
+	        // Check if the point is on the bottom base
+	        if (Util.isZero(length)) {
+	            return dir.scale(-1);
+	        }
+	        // Check if the point is on the top base
+	        if (Util.isZero(length - height)) {
+	            return dir;
+	        }
+	        // The point is on the lateral surface
+	        Point closestPoint = head.add(dir.scale(length)); // The projection point on the axis
+	        return p.subtract(closestPoint).normalize();
 	}
 }

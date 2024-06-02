@@ -18,7 +18,7 @@ public class Sphere extends RadialGeometry {
 	 * @param p      The center point of the sphere
 	 * @param radius The radius of the sphere
 	 */
-	protected Sphere(Point p, double radius) {
+	public Sphere(Point p, double radius) {
 		super(radius); // Call the constructor of the superclass RadialGeometry
 		center = p;
 	}
@@ -31,6 +31,9 @@ public class Sphere extends RadialGeometry {
 	 */
 	@Override
 	public Vector getNormal(Point p) {
-		return null; // Currently not implemented
-	}
+        // Calculate the vector from the center to the point
+        Vector normalVector = p.subtract(center);
+        // Normalize the vector to get the normal
+        return normalVector.normalize();
+    }
 }
