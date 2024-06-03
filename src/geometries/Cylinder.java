@@ -40,6 +40,8 @@ public class Cylinder extends Tube {
 	Point head = axis.getHead();
 	        Vector dir = axis.getDirection();
 	        // Calculate projection of p-head on the direction vector
+	        if(p.equals(head))
+	        	return dir;
 	        double length = dir.dotProduct(p.subtract(head));
 	        // Check if the point is on the bottom base
 	        if (Util.isZero(length)) {

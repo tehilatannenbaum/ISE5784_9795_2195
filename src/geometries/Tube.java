@@ -1,5 +1,6 @@
 package geometries;
 
+import static primitives.Util.*;
 import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
@@ -40,7 +41,7 @@ public class Tube extends RadialGeometry {
 	    Vector headToP = p.subtract(head);
 	    double length = dir.dotProduct(headToP);
 	    // Calculate the point O on the axis closest to point p
-	    Point closestPoint = head.add(dir.scale(length));
+	    Point closestPoint = isZero(length) ? head : head.add(dir.scale(length));
 	    // Calculate the normal vector from O to p and normalize it
 	    return p.subtract(closestPoint).normalize();
 	}

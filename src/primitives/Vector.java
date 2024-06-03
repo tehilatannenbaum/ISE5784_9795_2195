@@ -55,9 +55,6 @@ public class Vector extends Point {
 	 *         specified scalar value
 	 */
 	public Vector scale(double scalar) {
-		if (scalar == 0) {
-            throw new IllegalArgumentException("Scaling factor cannot be zero");
-        }
         return new Vector(this.xyz.d1 * scalar, this.xyz.d2 * scalar, this.xyz.d3 * scalar);
 	}
 

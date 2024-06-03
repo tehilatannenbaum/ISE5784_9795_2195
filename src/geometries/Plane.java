@@ -23,7 +23,9 @@ public class Plane implements Geometry {
 	 * @param p3 The third point on the plane
 	 */
 	public Plane(Point p1, Point p2, Point p3) {
-		normalize = null; // Not used in this constructor
+		normalize = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
+		
+		//normalize = null; // Not used in this constructor
 		this.p = p1; // Choose any of the three points as the reference point
 	}
 

@@ -69,7 +69,7 @@ class PointTests {
 	    // Adding a zero vector (result should be the original point)
 		assertEquals(
 				Point.ZERO, 
-				p.add(new Vector(-1,-2,-3)),
+				p.add(new Vector(-4,-5,-6)),
 				"ERROR: point + vector = does not work correctlycenter of coordinates does not work correctly");
 		
 	}

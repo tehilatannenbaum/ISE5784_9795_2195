@@ -81,12 +81,11 @@ class VectorTests {
 		// =============== Boundary Values Tests ==================
 
 		// opposite add vector test
-		assertEquals(
-				Point.ZERO, 
-				vec.add(new Vector(-1, -2, -3)), 
+		
+		assertThrows(
+				IllegalArgumentException.class, 
+				() -> vec.add(new Vector(-1, -2, -3)), 
 				"ERROR: Vector + -itself does not work correctly");
-		// assertEquals(expected, actual, message)
-
 	}
 	
 	/**
@@ -109,10 +108,11 @@ class VectorTests {
 		// =============== Boundary Values Tests ==================
 
 		// opposite subtract vector test
-		assertEquals(
-				Point.ZERO, 
-				vec.subtract(new Vector(4,5,6)), 
+		assertThrows(
+				IllegalArgumentException.class, 
+				() -> vec.subtract(new Vector(4,5,6)), 
 				"ERROR: Vector - itself does not work correctly");
+		
 		// assertEquals(expected, actual, message)
 
 	}
@@ -167,10 +167,9 @@ class VectorTests {
 		// =============== Boundary Values Tests ==================
 
 		// Dot product with a zero vector
-
-		assertEquals(
-				0, 
-				vec.dotProduct(new Vector(0, 0, 0)), 
+		assertThrows(
+				IllegalArgumentException.class, 
+				() -> vec.dotProduct(new Vector(0,0,0)), 
 				"ERROR: dotProduct() with zero vector is not zero");
 
 		// Dot product of orthogonal vectors
@@ -268,8 +267,8 @@ class VectorTests {
 	 */
 	@Test
 	void testNormalize() {
-		Vector v = new Vector(1, 2, 3);
-		Vector u = v.normalize();
+		Vector vec = new Vector(1, 2, 3);
+		Vector u = vec.normalize();
 		
 		// ============ Equivalence Partitions Tests ==============
 
@@ -282,19 +281,17 @@ class VectorTests {
 				DELTA,
 				"ERROR: the normalized vector is not a unit vector");
 		
-		//cross product between parallel vectors returns zero vector
-		assertEquals(
-	            new Vector(0,0,0),
-	            v.crossProduct(u),
-	            "ERROR: the normalized vector is not parallel to the original one"
-	    );
+		//cross product between parallel vectors returns zero vector	
+		assertThrows(
+				IllegalArgumentException.class, 
+				() -> vec.crossProduct(u),
+				"ERROR: the normalized vector is not parallel to the original one");
 		
-		//dot product between parallel vectors equals to lengths multiplies
-		assertEquals(
-				v.dotProduct(v)<0,
-				"ERROR: the normalized vector is opposit to the original one");
-		//:TODO
-		
-					
-	}
+		// Dot product between parallel vectors equals the product of their lengths
+	    assertEquals(
+	            vec.dotProduct(u),
+	            vec.length(),
+	            DELTA,
+	            "ERROR: the normalized vector is not parallel to the original one");
+}
 }
