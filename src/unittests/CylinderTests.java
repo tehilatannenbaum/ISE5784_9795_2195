@@ -65,7 +65,7 @@ class CylinderTests {
 	        // Point in the center of the bottom base
 	        assertEquals(
 	        		new Vector(0, 0, -1), 
-	        		cylinder.getNormal(new Point(0, 0, 0)), 
+	        		cylinder.getNormal(new Point(0,0,0)), 
 	        		"Bad normal to cylinder in center of bottom base");
 
 	        // Point in the center of the top base

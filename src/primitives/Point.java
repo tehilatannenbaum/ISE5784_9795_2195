@@ -42,8 +42,12 @@ public class Point {
 	 * @return The vector from this point to the given point
 	 */
 	public Vector subtract(Point p) {
-		return new Vector(this.xyz.subtract(p.xyz));
-	}
+		Double3 result = this.xyz.subtract(p.xyz);
+        if (result.equals(Double3.ZERO)) {
+            throw new IllegalArgumentException("Vector can't be zero");
+        }
+        return new Vector(result);	
+     }
 
 	/**
 	 * Adds the given vector to this point, producing a new point.

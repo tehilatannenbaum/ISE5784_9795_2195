@@ -68,7 +68,10 @@ public class Vector extends Point {
 	 * @return The dot product of this vector with the specified vector
 	 */
 	public double dotProduct(Vector vec) {
-		return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
+		if (vec != null)
+			return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
+		else
+			return 0.0;
 	}
 
 	/**

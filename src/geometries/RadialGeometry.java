@@ -14,7 +14,7 @@ public abstract class RadialGeometry implements Geometry {
 	/**
 	 * Constructs a radial geometry with the given radius.
 	 * 
-	 * @param _radius The radius of the radial geometry
+	 * @param radius The radius of the radial geometry
 	 */
 	protected RadialGeometry(double radius) {
 		this.radius = radius;
