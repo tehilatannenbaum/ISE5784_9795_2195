@@ -1,6 +1,8 @@
 /**
- * 
- */
+
+Unit tests for the Tube class.
+This class contains test methods for verifying the correctness of the Tube's methods.
+*/
 package unittests;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,19 +14,17 @@ import primitives.Ray;
 
 import org.junit.jupiter.api.Test;
 
-/**
- * * Unit tests for geometries.Tube class
- * 
- * @author Tehila and Maayan
- *
- */
+
 class TubeTests {
 	private final double DELTA = 0.000001;
 
 	
 	/**
-	 * Test method for {@link geometries.Tube#getNormal(primitives.Point)}.
-	 */
+
+	Test method for {@link geometries.Tube#getNormal(primitives.Point)}.
+
+	This method tests the correctness of the Tube's getNormal method.
+	*/
 	@Test
 	void testGetNormal() {
 		  // ============ Equivalence Partitions Tests ==============

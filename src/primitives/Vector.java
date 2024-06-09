@@ -43,7 +43,6 @@ public class Vector extends Point {
 	 *         this vector
 	 */
 	public Vector add(Vector vec) {
-		
 		return new Vector(this.xyz.add(vec.xyz));
 	}
 
@@ -66,7 +65,9 @@ public class Vector extends Point {
 	 */
 	public double dotProduct(Vector vec) {
 		if (vec != null)
-			return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
+			return this.xyz.d1 * vec.xyz.d1 + 
+					this.xyz.d2 * vec.xyz.d2 + 
+					this.xyz.d3 * vec.xyz.d3;
 		else
 			return 0.0;
 	}

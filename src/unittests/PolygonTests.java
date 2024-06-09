@@ -10,16 +10,23 @@ import primitives.Vector;
 
 /**
  * Testing Polygons
- * @author Dan
+ * This class contains unit tests for the Polygon class.
+ * It tests the constructor and the getNormal method.
+ * 
+ * @see geometries.Polygon
+ * @see primitives.Point
+ * @see primitives.Vector
+ * @see org.junit.jupiter.api.Test
+ * @see static org.junit.jupiter.api.Assertions
+ * 
  */
 public class PolygonTests {
-   /**
-    * Delta value for accuracy when comparing the numbers of type 'double' in
-    * assertEquals
-    */
+  
    private final double DELTA = 0.000001;
-
-   /** Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}. */
+   /**
+    * Test method for the Polygon constructor.
+    * Ensures that the Polygon is constructed correctly and throws exceptions for invalid input.
+    */
    @Test
    public void testConstructor() {
       // ============ Equivalence Partitions Tests ==============
@@ -66,8 +73,10 @@ public class PolygonTests {
                    "Constructed a polygon with vertice on a side");
 
    }
-
-   /** Test method for {@link geometries.Polygon#getNormal(primitives.Point)}. */
+   /**
+    * Test method for getNormal(Point) in the Polygon class.
+    * Ensures that the normal vector is a unit vector and orthogonal to the plane.
+    */
    @Test
    public void testGetNormal() {
       // ============ Equivalence Partitions Tests ==============

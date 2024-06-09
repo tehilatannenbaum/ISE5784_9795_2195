@@ -2,62 +2,98 @@ package geometries;
 
 import primitives.Point;
 import primitives.Vector;
+import primitives.Ray;
+import primitives.Util;
+
+import java.util.List;
 
 /**
  * Represents a plane in 3D space. A plane is defined by either three points or
  * a point and a normal vector.
  */
-public class Plane implements Geometry {
+public class Plane implements Geometry, Intersectable {
 
-	/** A point on the plane */
-	private final Point p;
+    /** A point on the plane */
+    private final Point p;
 
-	/** The normal vector to the plane */
-	private final Vector normalize;
+    /** The normal vector to the plane */
+    private final Vector normalize;
 
-	/**
-	 * Constructs a plane using three points on it.
-	 * 
-	 * @param p1 The first point on the plane
-	 * @param p2 The second point on the plane
-	 * @param p3 The third point on the plane
-	 */
-	public Plane(Point p1, Point p2, Point p3) {
-		normalize = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
-		
-		//normalize = null; // Not used in this constructor
-		this.p = p1; // Choose any of the three points as the reference point
-	}
+    /**
+     * Constructs a plane using three points on it.
+     * 
+     * @param p1 The first point on the plane
+     * @param p2 The second point on the plane
+     * @param p3 The third point on the plane
+     */
+    public Plane(Point p1, Point p2, Point p3) {
+        normalize = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
+        this.p = p1; 
+    }
 
-	/**
-	 * Constructs a plane using a reference point and a normal vector.
-	 * 
-	 * @param _p  The reference point on the plane
-	 * @param vec The normal vector to the plane
-	 */
-	protected Plane(Point p, Vector vec) {
-		this.p = p;
-		normalize = vec; // Normalize the vector to ensure it's a unit vector
-	}
+    /**
+     * Constructs a plane using a reference point and a normal vector.
+     * 
+     * @param p   The reference point on the plane
+     * @param vec The normal vector to the plane
+     */
+    public Plane(Point p, Vector vec) {
+        this.p = p;
+        // Normalize the vector to ensure it's a unit vector
+        this.normalize = vec.normalize(); 
+    }
 
-	/**
-	 * Computes and returns the normal vector to the plane at a given point.
-	 * 
-	 * @param p The point on the plane (unused in this implementation)
-	 * @return The normalized normal vector to the plane
-	 */
-	@Override
-	public Vector getNormal(Point p) {
-		return normalize;// Returns the normalized normal vector
-	}
+    /**
+     * Gets the normal vector to the plane at a given point.
+     * 
+     * @param p The point on the plane
+     * @return The normal vector to the plane
+     */
+    @Override
+    public Vector getNormal(Point p) {
+        return normalize;
+    }
 
-	/**
-	 * Returns the normal vector to the plane.
-	 * 
-	 * @return The normalized normal vector to the plane
-	 */
+    /**
+     * Gets the normal vector to the plane.
+     * 
+     * @return The normal vector to the plane
+     */
+    public Vector getNormal() {
+        return normalize; 
+    }
 
-	public Vector getNormal() {
-		return normalize; // Returns the normalized normal vector
-	}
+    /**
+     * Finds the intersection points of a ray with the plane.
+     * 
+     * @param ray The ray to find intersections with
+     * @return A list of intersection points, or null if there are no intersections
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        Point p0 = ray.getHead();
+        Vector v = ray.getDirection();
+
+        // Calculate nv
+        double nv = normalize.dotProduct(v);
+
+        // If nv is zero, the ray is parallel to the plane (no intersections)
+        if (Util.isZero(nv)) {
+            return null;
+        }
+
+        // Calculate n * (p - p0) / nv
+        double t = Util.alignZero(normalize.dotProduct(p.subtract(p0)) / nv);
+
+        // If t is negative, the intersection point is behind the ray's origin (no intersection)
+        if (t <= 0) {
+            return null;
+        }
+
+        // Calculate the intersection point
+        Point intersectionPoint = ray.getPoint(t);
+
+        // Return the intersection point as a list
+        return List.of(intersectionPoint);
+    }
 }

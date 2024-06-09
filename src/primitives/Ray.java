@@ -9,6 +9,21 @@ public class Ray {
 	private final Point head;
 	/** The direction vector of the ray */
 	private final Vector direction;
+	
+	/**
+     * Returns the point at a distance t along the ray.
+     * 
+     * @param t The distance along the ray
+     * @return The point at distance t along the ray
+     */
+    public Point getPoint(double t) {
+    	 if (Util.isZero(t)) {
+             return head;
+    	 }
+    	 
+        return head.add(direction.scale(t)); // p(t) = head + t * direction      
+    }
+    
 	public Point getHead() {
         return head;
     }
@@ -26,7 +41,7 @@ public class Ray {
 	public Ray(Point p, Vector vec) {
 		// Normalize the direction vector to ensure it represents a unit vector
 		head = p;
-		direction = vec.normalize();
+		direction = vec;
 	}
 
 	/**
@@ -53,4 +68,6 @@ public class Ray {
 	public String toString() {
 		return head + "->" + direction;
 	}
+
+	
 }

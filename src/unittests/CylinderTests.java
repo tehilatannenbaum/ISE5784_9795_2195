@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 class CylinderTests {
 
 	/**
+     * Tests the getNormal method of the Cylinder class.
 	 * Test method for {@link geometries.Cylinder#getNormal(primitives.Point)}.
 	 */
 	@Test

@@ -4,13 +4,14 @@ import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
 import primitives.Util;
+import java.util.List;
 
 /**
  * Represents a cylinder in 3D space. A cylinder is defined by its axis, radius,
  * and height. Inherits from the Tube class, representing a tube with zero
  * thickness.
  */
-public class Cylinder extends Tube {
+public class Cylinder extends Tube implements Intersectable{
 
 	/** The height of the cylinder */
 	@SuppressWarnings("unused")
@@ -55,4 +56,10 @@ public class Cylinder extends Tube {
 	        Point closestPoint = head.add(dir.scale(length)); // The projection point on the axis
 	        return p.subtract(closestPoint).normalize();
 	}
+	
+	 @Override
+	    public List<Point> findIntersections(Ray ray) {
+		 return null;
+		 //:TODO add javadoc, implement function
+	 }
 }

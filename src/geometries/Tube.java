@@ -4,12 +4,13 @@ import static primitives.Util.*;
 import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
+import java.util.List;
 
 /**
  * Represents a tube in three-dimensional space. A tube is a type of radial
  * geometry with an axis defined by a ray and a radius.
  */
-public class Tube extends RadialGeometry {
+public class Tube extends RadialGeometry implements Intersectable{
 	/**
 	 * The axis of the tube, defined by a ray.
 	 */
@@ -45,4 +46,10 @@ public class Tube extends RadialGeometry {
 	    // Calculate the normal vector from O to p and normalize it
 	    return p.subtract(closestPoint).normalize();
 	}
+	
+	 @Override
+	    public List<Point> findIntersections(Ray ray) {
+		 return null;
+		 //:TODO add javadoc, implement function
+	 }
 }
