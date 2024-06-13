@@ -11,7 +11,7 @@ import java.util.List;
  * and height. Inherits from the Tube class, representing a tube with zero
  * thickness.
  */
-public class Cylinder extends Tube implements Intersectable{
+public class Cylinder extends Tube implements Intersectable {
 
 	/** The height of the cylinder */
 	@SuppressWarnings("unused")
@@ -38,28 +38,28 @@ public class Cylinder extends Tube implements Intersectable{
 	 */
 	@Override
 	public Vector getNormal(Point p) {
-	Point head = axis.getHead();
-	        Vector dir = axis.getDirection();
-	        // Calculate projection of p-head on the direction vector
-	        if(p.equals(head))
-	        	return dir;
-	        double length = dir.dotProduct(p.subtract(head));
-	        // Check if the point is on the bottom base
-	        if (Util.isZero(length)) {
-	            return dir.scale(-1);
-	        }
-	        // Check if the point is on the top base
-	        if (Util.isZero(length - height)) {
-	            return dir;
-	        }
-	        // The point is on the lateral surface
-	        Point closestPoint = head.add(dir.scale(length)); // The projection point on the axis
-	        return p.subtract(closestPoint).normalize();
+		Point head = axis.getHead();
+		Vector dir = axis.getDirection();
+		// Calculate projection of p-head on the direction vector
+		if (p.equals(head))
+			return dir;
+		double length = dir.dotProduct(p.subtract(head));
+		// Check if the point is on the bottom base
+		if (Util.isZero(length)) {
+			return dir.scale(-1);
+		}
+		// Check if the point is on the top base
+		if (Util.isZero(length - height)) {
+			return dir;
+		}
+		// The point is on the lateral surface
+		Point closestPoint = head.add(dir.scale(length)); // The projection point on the axis
+		return p.subtract(closestPoint).normalize();
 	}
-	
-	 @Override
-	    public List<Point> findIntersections(Ray ray) {
-		 return null;
-		 //:TODO add javadoc, implement function
-	 }
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		return null;
+		// :TODO add javadoc, implement function
+	}
 }

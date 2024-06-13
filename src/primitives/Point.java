@@ -43,11 +43,11 @@ public class Point {
 	 */
 	public Vector subtract(Point p) {
 		Double3 result = this.xyz.subtract(p.xyz);
-        if (result.equals(Double3.ZERO)) {
-            throw new IllegalArgumentException("Vector can't be zero");
-        }
-        return new Vector(result);	
-     }
+		if (result.equals(Double3.ZERO)) {
+			throw new IllegalArgumentException("Vector can't be zero");
+		}
+		return new Vector(result);
+	}
 
 	/**
 	 * Adds the given vector to this point, producing a new point.
@@ -69,7 +69,7 @@ public class Point {
 		double dx = this.xyz.d1 - p.xyz.d1;
 		double dy = this.xyz.d2 - p.xyz.d2;
 		double dz = this.xyz.d3 - p.xyz.d3;
-		
+
 		return (dx * dx + dy * dy + dz * dz);
 	}
 

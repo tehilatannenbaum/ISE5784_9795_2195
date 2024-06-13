@@ -9,28 +9,28 @@ public class Ray {
 	private final Point head;
 	/** The direction vector of the ray */
 	private final Vector direction;
-	
-	/**
-     * Returns the point at a distance t along the ray.
-     * 
-     * @param t The distance along the ray
-     * @return The point at distance t along the ray
-     */
-    public Point getPoint(double t) {
-    	 if (Util.isZero(t)) {
-             return head;
-    	 }
-    	 
-        return head.add(direction.scale(t)); // p(t) = head + t * direction      
-    }
-    
-	public Point getHead() {
-        return head;
-    }
 
-    public Vector getDirection() {
-        return direction;
-    }
+	/**
+	 * Returns the point at a distance t along the ray.
+	 * 
+	 * @param t The distance along the ray
+	 * @return The point at distance t along the ray
+	 */
+	public Point getPoint(double t) {
+		if (Util.isZero(t)) {
+			return head;
+		}
+
+		return head.add(direction.scale(t)); // p(t) = head + t * direction
+	}
+
+	public Point getHead() {
+		return head;
+	}
+
+	public Vector getDirection() {
+		return direction;
+	}
 
 	/**
 	 * Constructs a new Ray with the given starting point and direction vector.
@@ -69,5 +69,4 @@ public class Ray {
 		return head + "->" + direction;
 	}
 
-	
 }

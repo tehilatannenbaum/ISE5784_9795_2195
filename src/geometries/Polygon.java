@@ -44,17 +44,16 @@ public class Polygon implements Geometry, Intersectable {
 	 *                                  </ul>
 	 */
 	public Polygon(Point... vertices) {
-        if (vertices.length < 3)
-            throw new IllegalArgumentException("A polygon can't have less than 3 vertices");
-        for (Point vertex : vertices) {
-            if (vertex == null) {
-                throw new IllegalArgumentException(" null can't be points");
-            }
-        }
-        
+		if (vertices.length < 3)
+			throw new IllegalArgumentException("A polygon can't have less than 3 vertices");
+		for (Point vertex : vertices) {
+			if (vertex == null) {
+				throw new IllegalArgumentException(" null can't be points");
+			}
+		}
+
 		this.vertices = List.of(vertices);
 		size = vertices.length;
-		
 
 		// Generate the plane according to the first three vertices and associate the
 		// polygon with this plane.
@@ -93,11 +92,11 @@ public class Polygon implements Geometry, Intersectable {
 	public Vector getNormal(Point point) {
 		return plane.getNormal();
 	}
-	
-	 @Override
-	    public List<Point> findIntersections(Ray ray) {
-		 return null;
-		 //:TODO add javadoc, implement function
-	 }
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		return null;
+		// :TODO add javadoc, implement function
+	}
 
 }

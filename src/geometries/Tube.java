@@ -10,7 +10,7 @@ import java.util.List;
  * Represents a tube in three-dimensional space. A tube is a type of radial
  * geometry with an axis defined by a ray and a radius.
  */
-public class Tube extends RadialGeometry implements Intersectable{
+public class Tube extends RadialGeometry implements Intersectable {
 	/**
 	 * The axis of the tube, defined by a ray.
 	 */
@@ -36,20 +36,20 @@ public class Tube extends RadialGeometry implements Intersectable{
 	 */
 	@Override
 	public Vector getNormal(Point p) {
-	Point head = axis.getHead();
-	    Vector dir = axis.getDirection();
-	    // Calculate the projection of p-head on the direction vector dir
-	    Vector headToP = p.subtract(head);
-	    double length = dir.dotProduct(headToP);
-	    // Calculate the point O on the axis closest to point p
-	    Point closestPoint = isZero(length) ? head : head.add(dir.scale(length));
-	    // Calculate the normal vector from O to p and normalize it
-	    return p.subtract(closestPoint).normalize();
+		Point head = axis.getHead();
+		Vector dir = axis.getDirection();
+		// Calculate the projection of p-head on the direction vector dir
+		Vector headToP = p.subtract(head);
+		double length = dir.dotProduct(headToP);
+		// Calculate the point O on the axis closest to point p
+		Point closestPoint = isZero(length) ? head : head.add(dir.scale(length));
+		// Calculate the normal vector from O to p and normalize it
+		return p.subtract(closestPoint).normalize();
 	}
-	
-	 @Override
-	    public List<Point> findIntersections(Ray ray) {
-		 return null;
-		 //:TODO add javadoc, implement function
-	 }
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		return null;
+		// :TODO add javadoc, implement function
+	}
 }

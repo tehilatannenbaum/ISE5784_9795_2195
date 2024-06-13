@@ -54,7 +54,7 @@ public class Vector extends Point {
 	 *         specified scalar value
 	 */
 	public Vector scale(double scalar) {
-        return new Vector(this.xyz.d1 * scalar, this.xyz.d2 * scalar, this.xyz.d3 * scalar);
+		return new Vector(this.xyz.d1 * scalar, this.xyz.d2 * scalar, this.xyz.d3 * scalar);
 	}
 
 	/**
@@ -65,9 +65,7 @@ public class Vector extends Point {
 	 */
 	public double dotProduct(Vector vec) {
 		if (vec != null)
-			return this.xyz.d1 * vec.xyz.d1 + 
-					this.xyz.d2 * vec.xyz.d2 + 
-					this.xyz.d3 * vec.xyz.d3;
+			return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
 		else
 			return 0.0;
 	}

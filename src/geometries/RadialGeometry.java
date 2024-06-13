@@ -20,7 +20,7 @@ public abstract class RadialGeometry implements Geometry {
 		this.radius = radius;
 		radiusSquared = radius * radius;
 	}
-	
+
 	protected double getRadius() {
 		return radius;
 	}
