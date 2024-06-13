@@ -71,7 +71,6 @@ class SphereTests {
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Ray's line is outside the sphere (0 points)
 		assertNull(sphere.findIntersections(new Ray(p01, v111)), "Ray's line out of sphere");
-		// :TODO μαγεχ V11
 		// TC02: Ray starts before and crosses the sphere (2 points)
 		final var result1 = sphere.findIntersections(new Ray(p01, v310)).stream()
 				.sorted(Comparator.comparingDouble(p -> p.distance(p01))).toList();

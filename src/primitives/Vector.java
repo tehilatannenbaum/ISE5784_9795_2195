@@ -64,10 +64,7 @@ public class Vector extends Point {
 	 * @return The dot product of this vector with the specified vector
 	 */
 	public double dotProduct(Vector vec) {
-		if (vec != null)
-			return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
-		else
-			return 0.0;
+		return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
 	}
 
 	/**
@@ -109,8 +106,7 @@ public class Vector extends Point {
 	 * @return A new vector that is the normalized version of this vector
 	 */
 	public Vector normalize() {
-		double length = length();
-		return new Vector(xyz.d1 / length, xyz.d2 / length, xyz.d3 / length);
+		return scale(1 / length());
 	}
 
 	/**
