@@ -5,7 +5,6 @@
 package unittests;
 
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.ArrayList;
 
 import java.util.ArrayList;
 
@@ -80,53 +79,54 @@ class TriangleTests {
 			 
 			 Triangle triangle = new Triangle(new Point(0,0,1),new Point(1,0,0),new Point(0,1,0));
 		        
-		        Vector v033 = new Vector(0.33,0.33,0.33);
 		        Vector v0111 = new Vector(-1,1,1);
 		        Vector v0331 = new Vector(0.33,0.33,1);
 		        Vector v03031 = new Vector(-3,-3,1);
 		        Vector v101 = new Vector(1,0,1);
 		        Vector v133 = new Vector(1.33,-0.33,0);
-				 Vector v0333=new Vector(0.33333333333333326,0.33333333333333326,0.33333333333333326);
+		        Vector v0001 = new Vector(0, 0, -1);
 
 
 		        Point p0500 = new Point(0.5,0,0);
 		        Point p111 = new Point(1,1,1);
-		        Point p0505 = new Point(0.5,0.5,0.5);
-		        Point p033 = new Point(0.33,0.33,0.33);
 		        Point p05051 = new Point(0.5,0.5,1);
 		        Point p1115 = new Point(1,1,1.5);
 		        Point p110 = new Point(1,1,0);
-				 Point p0333=new Point(0.33333333333333326,0.33333333333333326,0.33333333333333326);
+		        Point p0333 = new Point(0.33333333333333326,0.33333333333333326,0.33333333333333326);
+				Point p0331 = new Point(0.33333333333333326,0.33333333333333326,1);
+
 
 		      
 			 
 			// ============ Equivalence Partitions Tests ==============
-			 // TC01: Point inside triangle (1 points)
-				 Triangle triangle1 = new Triangle(new Point(1,0,1),new Point(2,0,2),new Point(3,0,1));
-				 final var result1 = triangle1.findIntersections(new Ray(new Point(1.75,1,1.5), new Vector(0,-1,0)));
-				 final var exp1 = List.of(new Point(1.75,0,1.5));  
-		        // final var result1 = triangle.findIntersections(new Ray(p0505, v0333));
-				// final var exp1 = List.of(p0333);  
+			 // TC01: Point inside triangle (1 points)				
+				 final var result1 = triangle.findIntersections(new Ray(p0331, v0001));
+				 final var exp1 = List.of(p0333);
 				 
 				 assertEquals(1, result1.size(), "Wrong number of points");
 				 assertEquals(exp1, result1, "Point inside triangle");
 		        
 		     // TC02: Point outside triangle (0 points)
-				 assertNull(triangle.findIntersections(new Ray(p111, v0111)), "Point outside triangle, infront of side");
+				 assertNull(triangle.findIntersections(new Ray(p111, v0111)), 
+						 "Point outside triangle, infront of side");
 				   
 			 // TC03: Point outside triangle (0 points)
-				 assertNull(triangle.findIntersections(new Ray(p1115, v03031)), "Point outside triangle, infront of vertex");
+				 assertNull(triangle.findIntersections(new Ray(p1115, v03031)), 
+						 "Point outside triangle, infront of vertex");
 
 				 
 		     // =============== Boundary Values Tests ==================
 		     // TC04: Point on triangle side (0 points)
-				 assertNull(triangle.findIntersections(new Ray(p0500, v101)), "Point on triangle side");
+				 assertNull(triangle.findIntersections(new Ray(p0500, v101)), 
+						 "Point on triangle side");
 
 		      // TC05: Point on triangle vertex (0 points)
-				 assertNull(triangle.findIntersections(new Ray(p05051, v0331)), "Point on triangle vertex");
+				 assertNull(triangle.findIntersections(new Ray(p05051, v0331)), 
+						 "Point on triangle vertex");
 			  
 			// TC06: Point on continuation of triangle side (0 points)
-				 assertNull(triangle.findIntersections(new Ray(p110, v133)), "Point on continuation of triangle side");
+				 assertNull(triangle.findIntersections(new Ray(p110, v133)), 
+						 "Point on continuation of triangle side");
 
 				 
 

@@ -43,7 +43,7 @@ public class Triangle extends Polygon implements Intersectable{
 	   Vector v1= vertices.get(0).subtract(ray.getHead());
 	   Vector v2= vertices.get(1).subtract(ray.getHead());
 	   
-	   Vector n1 = v1.crossProduct(v2);
+	   Vector n1 = v1.crossProduct(v2).normalize();
 	   double result1 = Util.alignZero(ray.getDirection().dotProduct(n1));
 	   if(result1==0) {
 		   return null;
@@ -51,13 +51,13 @@ public class Triangle extends Polygon implements Intersectable{
 	   
 	   
 	   Vector v3= vertices.get(2).subtract(ray.getHead());
-	   Vector n2 = v2.crossProduct( v3);
+	   Vector n2 = v2.crossProduct( v3).normalize();
 	   double result2 = Util.alignZero(ray.getDirection().dotProduct(n2));
 	   if(result1 * result2 <=0) {
 		   return null;
 	   }
 	    
-	   Vector n3 = v3.crossProduct( v1);
+	   Vector n3 = v3.crossProduct( v1).normalize();
 	   double result3 = Util.alignZero(ray.getDirection().dotProduct(n3));
 	   if(result3 * result1 <=0) {
 		   return null;
