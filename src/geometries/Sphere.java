@@ -1,12 +1,11 @@
+
 package geometries;
 
 import primitives.Point;
 
 import primitives.Vector;
 import primitives.Ray;
-import primitives.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static primitives.Util.*;
@@ -57,26 +56,29 @@ public class Sphere extends RadialGeometry implements Intersectable {
 	public List<Point> findIntersections(Ray ray) {
 		Point p0 = ray.getHead();
 		Vector v = ray.getDirection();
-		double radius = this.getRadius();
 
 		// If the ray starts at the center of the sphere, there's only one intersection
 		// point
 		if (p0.equals(center)) {
-			return List.of(center.add(v.scale(radius)));
+			return List.of(ray.getPoint(radius));
 		}
 		// Vector from ray origin to sphere center
 		Vector u = center.subtract(p0);
+		// Projection of u onto ray direction
+		double tm = alignZero(v.dotProduct(u));
+		double dSquared = alignZero(u.lengthSquared() - tm * tm);
+		double thSquared = alignZero(radiusSquared - dSquared);
 
-		double tm = alignZero(v.dotProduct(u)); // Projection of u onto ray direction
-		double dSquared = alignZero(u.lengthSquared() - tm * tm); // Squared distance from sphere center to ray
-		double thSquared = alignZero(radius * radius - dSquared); // Squared distance from the closest approach to
-																	// intersection point
-
+		if (alignZero(thSquared) <= 0)
+			return null;
 		// There's no intersection
 		double d = alignZero(Math.sqrt(dSquared));
+
 		if (d >= radius) {
 			return null;
 		}
+
+		// alignZero, vec lengthSquared, vec subtract, vec dotProduct
 
 		double th = alignZero(Math.sqrt(thSquared)); // Distance from the closest approach to intersection point
 		// Distance from ray origin to the first and second intersection point

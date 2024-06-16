@@ -1,7 +1,6 @@
 package geometries;
 
 import primitives.*;
-import primitives.Util.*;
 
 import java.util.List;
 

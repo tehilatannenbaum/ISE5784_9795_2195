@@ -1,8 +1,3 @@
-/**
-
-Unit tests for the Tube class.
-This class contains test methods for verifying the correctness of the Tube's methods.
-*/
 package unittests.geometries;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +9,14 @@ import primitives.Ray;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for the Tube class. This class contains test methods for verifying
+ * the correctness of the Tube's methods.
+ */
 class TubeTests {
+	/**
+	 * Tolerance for floating-point comparisons.
+	 */
 	private final double DELTA = 0.000001;
 
 	/**

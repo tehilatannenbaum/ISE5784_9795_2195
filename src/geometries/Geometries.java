@@ -3,7 +3,6 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,10 +14,14 @@ import java.util.List;
  */
 public class Geometries implements Intersectable {
 
-	// List of geometric objects
+	/**
+	 * List containing intersectable geometries.
+	 */
 	private final List<Intersectable> geometries = new LinkedList<>();
 
-	// Default constructor - creates an empty list of geometries
+	/**
+	 * Constructs an empty collection of geometric objects.
+	 */
 	public Geometries() {
 	}
 

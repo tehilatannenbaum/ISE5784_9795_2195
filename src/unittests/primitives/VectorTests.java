@@ -3,11 +3,8 @@
  */
 package unittests.primitives;
 
-import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
-import static primitives.Util.isZero;
 
-import primitives.Point;
 import primitives.Vector;
 import primitives.Double3;
 import org.junit.jupiter.api.Test;
@@ -15,10 +12,12 @@ import org.junit.jupiter.api.Test;
 /**
  * * Unit tests for primitives.Vector class
  * 
- * @author Tehila and Maayan
  * 
  */
 class VectorTests {
+	/**
+	 * Tolerance for floating-point comparisons.
+	 */
 	private final double DELTA = 0.000001;
 
 	/**
@@ -30,10 +29,10 @@ class VectorTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// test ctor based on coordinates
+		// test actor based on coordinates
 		assertDoesNotThrow(() -> new Vector(1, 2, 3), "Failed constructing a correct vector");
 
-		// TC: test ctor based on type Double3
+		// TC: test actor based on type Double3
 		assertDoesNotThrow(() -> new Vector(new Double3(4, 5, 6)), "Failed constructing a correct vector");
 
 		// =============== Boundary Values Tests ==================

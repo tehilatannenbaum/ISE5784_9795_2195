@@ -1,12 +1,7 @@
-/**
- * This class represents a set of JUnit tests for the Plane class.
- * It includes tests for the constructor, getNormal method, and the findIntersections method.
- */
 package unittests.geometries;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,10 +10,17 @@ import primitives.Vector;
 import primitives.Point;
 import primitives.Ray;
 import geometries.Plane;
-import primitives.Util.*;
 
+/**
+ * This class represents a set of JUnit tests for the Plane class. It includes
+ * tests for the constructor, getNormal method, and the findIntersections
+ * method.
+ */
 class PlaneTests {
 
+	/**
+	 * Tolerance for floating-point comparisons.
+	 */
 	private final double DELTA = 0.000001;
 
 	/**
@@ -75,7 +77,6 @@ class PlaneTests {
 		Point p001 = new Point(0, 0, 1);
 		Point p0001 = new Point(0, 0, -1);
 		Point p05050 = new Point(0.5, 0.5, 0);
-		Point p0 = new Point(0, 0, 0);
 		Point p111 = new Point(1, 1, 1);
 		Point p1001 = new Point(1, 0, -1);
 		Point p0333 = new Point(0.33333333333333326, 0.33333333333333326, 0.33333333333333326);

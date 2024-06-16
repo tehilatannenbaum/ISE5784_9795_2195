@@ -7,9 +7,9 @@ package geometries;
 public abstract class RadialGeometry implements Geometry {
 
 	/** The radius of the radial geometry */
-	private final double radius;
+	public final double radius;
 	/** The squared radius of the radial geometry */
-	private final double radiusSquared;
+	public final double radiusSquared;
 
 	/**
 	 * Constructs a radial geometry with the given radius.
@@ -21,7 +21,13 @@ public abstract class RadialGeometry implements Geometry {
 		radiusSquared = radius * radius;
 	}
 
+	/**
+	 * Returns the radius of this object.
+	 *
+	 * @return the radius.
+	 */
 	protected double getRadius() {
 		return radius;
 	}
+
 }

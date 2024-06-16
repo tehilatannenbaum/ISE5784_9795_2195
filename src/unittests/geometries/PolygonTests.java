@@ -16,11 +16,12 @@ import primitives.Vector;
  * @see primitives.Point
  * @see primitives.Vector
  * @see org.junit.jupiter.api.Test
- * @see static org.junit.jupiter.api.Assertions
  * 
  */
 public class PolygonTests {
-
+	/**
+	 * Tolerance for floating-point comparisons.
+	 */
 	private final double DELTA = 0.000001;
 
 	/**

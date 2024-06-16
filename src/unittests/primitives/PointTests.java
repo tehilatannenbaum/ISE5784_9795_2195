@@ -3,9 +3,7 @@
  */
 package unittests.primitives;
 
-import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
-import static primitives.Util.isZero;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,11 +12,11 @@ import primitives.Vector;
 
 /**
  * * * Unit tests for primitives.Point class
- * 
- * @author Tehila and Maayan
- *
- */
+ **/
 class PointTests {
+	/**
+	 * Tolerance for floating-point comparisons.
+	 */
 	private final double DELTA = 0.000001;
 
 	/**

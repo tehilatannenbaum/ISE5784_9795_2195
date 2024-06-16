@@ -1,19 +1,15 @@
-/**
-
-Unit tests for the Geometries class.
-This class contains test methods for verifying the correctness of the Geometries' findIntersections method.
-*/
-
 package unittests.geometries;
 
 import geometries.*;
 import primitives.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Unit tests for the Geometries class. This class contains test methods for
+ * verifying the correctness of the Geometries' findIntersections method.
+ */
 class GeometriesTests {
 	/**
 	 * 

@@ -19,7 +19,7 @@ public class Tube extends RadialGeometry implements Intersectable {
 	/**
 	 * Constructs a tube with a given axis defined by a ray and a radius.
 	 * 
-	 * @param _axis  The axis of the tube
+	 * @param axis   The axis of the tube
 	 * @param radius The radius of the tube
 	 */
 	public Tube(Ray axis, double radius) {

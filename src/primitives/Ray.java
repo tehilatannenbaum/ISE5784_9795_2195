@@ -24,10 +24,20 @@ public class Ray {
 		return head.add(direction.scale(t)); // p(t) = head + t * direction
 	}
 
+	/**
+	 * Returns the head point of this object.
+	 *
+	 * @return the head point.
+	 */
 	public Point getHead() {
 		return head;
 	}
 
+	/**
+	 * Returns the direction vector of this object.
+	 *
+	 * @return the direction vector.
+	 */
 	public Vector getDirection() {
 		return direction;
 	}
@@ -41,7 +51,7 @@ public class Ray {
 	public Ray(Point p, Vector vec) {
 		// Normalize the direction vector to ensure it represents a unit vector
 		head = p;
-		direction = vec;
+		direction = vec.normalize();
 	}
 
 	/**

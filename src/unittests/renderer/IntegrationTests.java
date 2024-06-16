@@ -8,8 +8,17 @@ import java.util.List;
 import renderer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Integration tests for the renderer package, testing the intersection of rays
+ * from a camera with various geometrical objects.
+ */
 public class IntegrationTests {
 
+	/**
+	 * Initializes a camera builder with a specific direction and viewport size. The
+	 * camera is directed along the negative z-axis with the up vector along the
+	 * y-axis, and the viewport size is set to 3x3.
+	 */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setVpSize(3, 3);
 
@@ -40,7 +49,7 @@ public class IntegrationTests {
 	}
 
 	/**
-	 * Integration tests for sphere
+	 * Integration tests for sphere intersections.
 	 */
 	@Test
 	void sphereTest() {
@@ -78,7 +87,7 @@ public class IntegrationTests {
 	}
 
 	/**
-	 * Integration tests for plane
+	 * Integration tests for plane intersections.
 	 */
 	@Test
 	void planeTest() {
@@ -104,23 +113,22 @@ public class IntegrationTests {
 	}
 
 	/**
-	 * Integration tests for triangle
+	 * Integration tests for triangle intersections.
 	 */
 	@Test
 	void triangleTest() {
 		Camera camera = cameraBuilder.setLocation(new Point(0, 0, 0)).setVpDistance(1).build();
 
-		// TC01: test plane is not parallel to view plane (1 intersection)
+		// TC01: test triangle with 1 intersection
 		Triangle t1 = new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2));
 		int sum1 = sumIntersection(camera, t1, 3, 3);
 
 		assertEquals(1, sum1, "constructRay() and findIntersections() wrong result");
 
-		// TC02: test plane is not parallel to view plane (2 intersection)
+		// TC02: test triangle with 2 intersections
 		Triangle t2 = new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2));
 		int sum2 = sumIntersection(camera, t2, 3, 3);
 
 		assertEquals(2, sum2, "constructRay() and findIntersections() wrong result");
 	}
-
 }

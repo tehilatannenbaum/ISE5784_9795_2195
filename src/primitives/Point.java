@@ -2,8 +2,6 @@ package primitives;
 
 import static java.lang.Math.sqrt;
 
-import geometries.Geometry;
-
 /**
  * Represents a point in 3D space.
  */

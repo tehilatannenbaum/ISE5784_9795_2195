@@ -1,15 +1,8 @@
-/**
- * This class represents a set of JUnit tests for the Triangle class.
- * It includes tests for the getNormal method and the findIntersections method.
- */
 package unittests.geometries;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
 import java.util.List;
-import java.util.Comparator;
 import geometries.Triangle;
 import primitives.Point;
 import primitives.Vector;
@@ -17,7 +10,14 @@ import primitives.Ray;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * This class represents a set of JUnit tests for the Triangle class. It
+ * includes tests for the getNormal method and the findIntersections method.
+ */
 class TriangleTests {
+	/**
+	 * Tolerance for floating-point comparisons.
+	 */
 	private static final double DELTA = 0.000001;
 
 	{
