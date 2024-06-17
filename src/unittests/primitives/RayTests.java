@@ -1,8 +1,12 @@
 package unittests.primitives;
 
 import primitives.*;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Unit tests for the Ray class.
@@ -30,6 +34,50 @@ class RayTests {
 		Point expected3 = new Point(1, 1, 1);
 		assertEquals(expected3, ray3.getPoint(0), "Expected point at the origin of the ray.");
 
+	}
+
+	/**
+	 * Tests the findClosestPoint method. This test verifies that the
+	 * findClosestPoint method correctly identifies the point closest to a given
+	 * reference point from a set of points.
+	 */
+	@Test
+	void testFindClosestPoint() {
+		Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0));
+		Point p100 = new Point(1, 0, 0);
+		Point p0300 = new Point(-3, 0, 0);
+		Point p200 = new Point(2, 0, 0);
+
+		// Test with a list containing points
+		List<Point> points = new ArrayList<>();
+		points.add(p0300);
+		points.add(p100);
+		points.add(p200);
+
+		// ============ Equivalence Partitions Tests ==============
+		// TC01: Middle point should be closest
+		assertEquals(p100, ray.findClosestPoint(points));
+
+		// =============== Boundary Values Tests ==================
+
+		// TC02: First point should be closest
+		points.clear();
+		points.add(p100);
+		points.add(p0300);
+		points.add(p200);
+		assertEquals(p100, ray.findClosestPoint(points));
+
+		// TC03: Last point should be closest
+		points.clear();
+		points.add(p0300);
+		points.add(p200);
+		points.add(p100);
+
+		assertEquals(p100, ray.findClosestPoint(points));
+
+		// TC04: Test with empty list
+		points.clear();
+		assertNull(ray.findClosestPoint(points));
 	}
 
 }
