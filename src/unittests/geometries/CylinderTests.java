@@ -30,35 +30,35 @@ class CylinderTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// Point on the round surface
+		// TC01: Point on the round surface
 		assertEquals(new Vector(1, 0, 0), cylinder.getNormal(new Point(1, 0, 1)),
 				"Bad normal to cylinder on round surface");
 
-		// Point on the bottom base
+		// TC02: Point on the bottom base
 		assertEquals(new Vector(0, 0, -1), cylinder.getNormal(new Point(0.5, 0.5, 0)),
 				"Bad normal to cylinder on bottom base");
 
-		// Point on the top base
+		// TC03: Point on the top base
 		assertEquals(new Vector(0, 0, 1), cylinder.getNormal(new Point(0.5, 0.5, 2)),
 				"Bad normal to cylinder on top base");
 
 		// =============== Boundary Values Tests ==================
 
-		// Point on the edge between the round surface and the bottom base
+		// TC04: Point on the edge between the round surface and the bottom base
 		Vector normal = cylinder.getNormal(new Point(1, 0, 0));
 		assertTrue(normal.equals(new Vector(1, 0, 0)) || normal.equals(new Vector(0, 0, -1)),
 				"Bad normal to cylinder on edge of bottom base");
 
-		// Point on the edge between the round surface and the top base
+		// TC05: Point on the edge between the round surface and the top base
 		normal = cylinder.getNormal(new Point(1, 0, 2));
 		assertTrue(normal.equals(new Vector(1, 0, 0)) || normal.equals(new Vector(0, 0, 1)),
 				"Bad normal to cylinder on edge of top base");
 
-		// Point in the center of the bottom base
+		// TC06: Point in the center of the bottom base
 		assertEquals(new Vector(0, 0, 1), cylinder.getNormal(new Point(0, 0, 0)),
 				"Bad normal to cylinder in center of bottom base");
 
-		// Point in the center of the top base
+		// TC07: Point in the center of the top base
 		assertEquals(new Vector(0, 0, 1), cylinder.getNormal(new Point(0, 0, 2)),
 				"Bad normal to cylinder in center of top base");
 	}

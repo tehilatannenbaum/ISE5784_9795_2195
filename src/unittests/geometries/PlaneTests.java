@@ -32,12 +32,12 @@ class PlaneTests {
 
 		// =============== Boundary Values Tests ==================
 
-		// points converge
+		// TC01: points converge
 		assertThrows(IllegalArgumentException.class,
 				() -> new Plane(new Point(0, 0, 1), new Point(0, 0, 1), new Point(3, 7, 9)),
 				"illegally constructed with converged points");
 
-		// points align
+		// TC02: points align
 		assertThrows(IllegalArgumentException.class,
 				() -> new Plane(new Point(0, 0, 1), new Point(0, 0, 5), new Point(0, 0, 9)),
 				"illegally constructed with aligned points");
@@ -55,11 +55,11 @@ class PlaneTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// test unit normal
+		// TC01: test unit normal
 		assertEquals(1, pl.getNormal().length(), DELTA, "Plane's normal is not a unit vector");
 
 		// test orthogonal, 2 steps
-		// the new Vectors are in the plane
+		// TC02: the new Vectors are in the plane
 		assertEquals(0, pl.getNormal().dotProduct(new Vector(1, -1, 0)), DELTA, "Plane's normal is not orthogonal 1");
 
 		assertEquals(0, pl.getNormal().dotProduct(new Vector(0, -1, 1)), DELTA, "Plane's normal is not orthogonal 2");
@@ -72,7 +72,8 @@ class PlaneTests {
 	 */
 	@Test
 	public void testFindIntersections() {
-		Plane plane = new Plane(new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1));
+		Point q = new Point(1, 0, 0);
+		Plane plane = new Plane(q, new Point(0, 1, 0), new Point(0, 0, 1));
 
 		Point p001 = new Point(0, 0, 1);
 		Point p0001 = new Point(0, 0, -1);
@@ -130,7 +131,7 @@ class PlaneTests {
 
 		// TC09: Ray not orthogonal and not parallel the plane, ray starts plane(0
 		// point)
-		assertNull(plane.findIntersections(new Ray(p0333, v123)),
+		assertNull(plane.findIntersections(new Ray(q, v123)),
 				"Ray not orthogonal and not parallel the plane and starts on plane");
 
 	}

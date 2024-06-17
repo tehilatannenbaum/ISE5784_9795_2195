@@ -39,9 +39,8 @@ public class Sphere extends RadialGeometry implements Intersectable {
 	@Override
 	public Vector getNormal(Point p) {
 		// Calculate the vector from the center to the point
-		Vector normalVector = p.subtract(center);
 		// Normalize the vector to get the normal
-		return normalVector.normalize();
+		return p.subtract(center).normalize();
 
 	}
 
@@ -68,42 +67,25 @@ public class Sphere extends RadialGeometry implements Intersectable {
 		double tm = alignZero(v.dotProduct(u));
 		double dSquared = alignZero(u.lengthSquared() - tm * tm);
 		double thSquared = alignZero(radiusSquared - dSquared);
-
 		if (alignZero(thSquared) <= 0)
 			return null;
+
 		// There's no intersection
 		double d = alignZero(Math.sqrt(dSquared));
-
-		if (d >= radius) {
+		if (d >= radius)
 			return null;
-		}
 
 		// alignZero, vec lengthSquared, vec subtract, vec dotProduct
 
-		double th = alignZero(Math.sqrt(thSquared)); // Distance from the closest approach to intersection point
-		// Distance from ray origin to the first and second intersection point
-		double t1 = alignZero(tm - th);
+		// Distance from the closest approach to intersection point
+		double th = Math.sqrt(thSquared);
+		// Distance from ray origin to the first and second intersection point, t1 < t2
 		double t2 = alignZero(tm + th);
-
-		// If both t1 and t2 are positive, there are two intersection points
-		if (t1 > 0 && t2 > 0) {
-			Point p1 = ray.getPoint(t1);
-			Point p2 = ray.getPoint(t2);
-			return List.of(p1, p2);
-		}
-
-		// If t1 is positive, there's one intersection point
-		if (t1 > 0) {
-			return List.of(ray.getPoint(t1));
-		}
-
-		// If t2 is positive, there's one intersection point
-		if (t2 > 0) {
-			return List.of(ray.getPoint(t2));
-		}
-
-		// If both are negative, there's no intersection
-		return null;
+		if (t2 <= 0) return null;
+		
+		double t1 = alignZero(tm - th);
+		return t1 <= 0 ? List.of(ray.getPoint(t2)) //
+				: List.of(ray.getPoint(t1), ray.getPoint(t2));
 	}
 
 }

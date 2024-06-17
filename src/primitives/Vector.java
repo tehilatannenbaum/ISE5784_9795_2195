@@ -113,13 +113,7 @@ public class Vector extends Point {
 		return new Vector(xyz.d1 / length, xyz.d2 / length, xyz.d3 / length);
 	}
 
-	/**
-	 * Checks whether this vector is equal to another object. Two vectors are
-	 * considered equal if they have the same coordinates.
-	 * 
-	 * @param obj The object to compare with this vector
-	 * @return true if the given object is equal to this vector, false otherwise
-	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -127,12 +121,7 @@ public class Vector extends Point {
 		return obj instanceof Vector && super.equals(obj);
 	}
 
-	/**
-	 * Returns a string representation of this vector. The string representation
-	 * contains the label "Vector:" followed by the coordinates of the vector.
-	 * 
-	 * @return A string representation of this vector
-	 */
+	
 	@Override
 	public String toString() {
 		return "v" + super.toString();

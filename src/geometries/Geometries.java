@@ -41,9 +41,7 @@ public class Geometries implements Intersectable {
 	 * @param geometries Geometric objects to be added
 	 */
 	public void add(Intersectable... geometries) {
-		for (Intersectable geometry : geometries) {
-			this.geometries.add(geometry);
-		}
+		this.geometries.addAll(List.of(geometries));
 	}
 
 	/**
@@ -63,12 +61,12 @@ public class Geometries implements Intersectable {
 
 			// If there are intersections, add them to the main intersections list
 			if (tempIntersections != null) {
-				if (intersections == null) {
+				if (intersections == null)
 					// If the main intersections list is null, initialize it
-					intersections = new LinkedList<>();
-				}
-				// Add all intersections of the current geometry to the main list
-				intersections.addAll(tempIntersections);
+					intersections = new LinkedList<>(tempIntersections);
+				else
+					// Add all intersections of the current geometry to the main list
+					intersections.addAll(tempIntersections);
 			}
 		}
 

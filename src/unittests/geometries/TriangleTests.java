@@ -22,7 +22,7 @@ class TriangleTests {
 
 	{
 
-		// Test valid triangle
+		// TC01: Test valid triangle
 		try {
 			new Triangle(new Point(0, 0, 0), new Point(1, 0, 0), new Point(0, 1, 0));
 		} catch (IllegalArgumentException e) {
@@ -43,7 +43,6 @@ class TriangleTests {
 		Point p2 = new Point(1, 0, 0);
 		Point p3 = new Point(0, 1, 0);
 		Triangle triangle = new Triangle(p1, p2, p3);
-		assertNotNull(triangle);
 
 		// Ensure there are no exceptions
 		assertDoesNotThrow(() -> triangle.getNormal(p1), "");

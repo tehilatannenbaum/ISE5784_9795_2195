@@ -17,7 +17,7 @@ public class Plane implements Geometry, Intersectable {
 	private final Point p;
 
 	/** The normal vector to the plane */
-	private final Vector normalize;
+	private final Vector normal;
 
 	/**
 	 * Constructs a plane using three points on it.
@@ -25,9 +25,12 @@ public class Plane implements Geometry, Intersectable {
 	 * @param p1 The first point on the plane
 	 * @param p2 The second point on the plane
 	 * @param p3 The third point on the plane
+	 * 
+	 * @throws IllegalArgumentException if there are convergent points or the points
+	 *                                  are co-lineear
 	 */
 	public Plane(Point p1, Point p2, Point p3) {
-		normalize = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
+		normal = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
 		this.p = p1;
 	}
 
@@ -40,7 +43,7 @@ public class Plane implements Geometry, Intersectable {
 	public Plane(Point p, Vector vec) {
 		this.p = p;
 		// Normalize the vector to ensure it's a unit vector
-		this.normalize = vec.normalize();
+		this.normal = vec.normalize();
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class Plane implements Geometry, Intersectable {
 	 */
 	@Override
 	public Vector getNormal(Point p) {
-		return normalize;
+		return normal;
 	}
 
 	/**
@@ -60,7 +63,7 @@ public class Plane implements Geometry, Intersectable {
 	 * @return The normal vector to the plane
 	 */
 	public Vector getNormal() {
-		return normalize;
+		return normal;
 	}
 
 	/**
@@ -75,26 +78,22 @@ public class Plane implements Geometry, Intersectable {
 		Vector v = ray.getDirection();
 
 		// Calculate nv
-		double nv = normalize.dotProduct(v);
-
+		double nv = normal.dotProduct(v);
 		// If nv is zero, the ray is parallel to the plane (no intersections)
-		if (Util.isZero(nv)) {
+		if (Util.isZero(nv))
+			return null;
+
+		Vector pMinusP0;
+		try {
+			pMinusP0 = p.subtract(p0);
+		} catch (IllegalArgumentException ignore) {
 			return null;
 		}
-
 		// Calculate n * (p - p0) / nv
-		double t = Util.alignZero(normalize.dotProduct(p.subtract(p0)) / nv);
+		double t = Util.alignZero(normal.dotProduct(pMinusP0) / nv);
 
 		// If t is negative, the intersection point is behind the ray's origin (no
-		// intersection)
-		if (t <= 0) {
-			return null;
-		}
-
-		// Calculate the intersection point
-		Point intersectionPoint = ray.getPoint(t);
-
-		// Return the intersection point as a list
-		return List.of(intersectionPoint);
+		// intersection) and Return the intersection point as a list otherwise
+		return t <= 0 ? null : List.of(ray.getPoint(t));
 	}
 }

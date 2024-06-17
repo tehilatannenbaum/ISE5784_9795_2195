@@ -26,7 +26,7 @@ class SphereTests {
 	void testGetNormal() {
 		// ============ Equivalence Partitions Tests ==============
 
-		// Point on the surface of the sphere
+		// TC01: Point on the surface of the sphere
 		Sphere sphere = new Sphere(new Point(0, 0, 0), 1);
 
 		assertEquals(new Vector(1, 0, 0), sphere.getNormal(new Point(1, 0, 0)), "normal to sphere is not correct");
@@ -81,7 +81,6 @@ class SphereTests {
 		// TC01: Ray's line is outside the sphere (0 points)
 		assertNull(sphere.findIntersections(new Ray(p01, v111)), "Ray's line out of sphere");
 
-		// :TODO ����� V11
 		// TC02: Ray starts before and crosses the sphere (2 points)
 		final var result1 = sphere.findIntersections(new Ray(p01, v310)).stream()
 				.sorted(Comparator.comparingDouble(p -> p.distance(p01))).toList();

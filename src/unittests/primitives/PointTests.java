@@ -29,14 +29,13 @@ class PointTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// generic subtract test
+		// TC01: generic subtract test
 		assertEquals(new Point(3, 3, 3), p.subtract(new Point(1, 2, 3)),
 				"ERROR: Point - Point does not work correctly");
-		// assertEquals(expected, actual, message)
 
 		// =============== Boundary Values Tests ==================
 
-		// opposite subtract vector test
+		// TC02: opposite subtract vector test
 		assertThrows(IllegalArgumentException.class, () -> p.subtract(p),
 				"ERROR: Point - itself does not throw an exception");
 	}
@@ -50,12 +49,12 @@ class PointTests {
 		Point p = new Point(4, 5, 6);
 		// ============ Equivalence Partitions Tests ==============
 
-		// generic subtract test
+		// TC01: generic subtract test
 		assertEquals(new Point(5, 7, 9), p.add(new Vector(1, 2, 3)), "ERROR: point + vector does not work correctly");
 
 		// =============== Boundary Values Tests ==================
 
-		// Adding a zero vector (result should be the original point)
+		// TC02: Adding a zero vector (result should be the original point)
 		assertEquals(Point.ZERO, p.add(new Vector(-4, -5, -6)),
 				"ERROR: point + vector = does not work correctlycenter of coordinates does not work correctly");
 
@@ -72,15 +71,15 @@ class PointTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// generic distance squared test
+		// TC01: generic distance squared test
 		assertEquals(9, p1.distanceSquared(p2), DELTA, "ERROR: squared distance between points is wrong");
 
-		// opposite to generic distance squared test
+		// TC02: opposite to generic distance squared test
 		assertEquals(9, p2.distanceSquared(p1), DELTA, "ERROR: squared distance between points is wrong");
 
 		// =============== Boundary Values Tests ==================
 
-		// distance from self test should be 0
+		// TC03: distance from self test should be 0
 		assertEquals(0, p1.distanceSquared(p1), DELTA, "ERROR: point squared distance to itself is not zero");
 	}
 
@@ -95,15 +94,15 @@ class PointTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// generic distance test
+		// TC01: generic distance test
 		assertEquals(Math.sqrt(50), p1.distance(p2), DELTA, "ERROR: distance between points is wrong");
 
-		// opposite to generic distance test
+		// TC02: opposite to generic distance test
 		assertEquals(Math.sqrt(50), p2.distance(p1), DELTA, "ERROR: distance between points is wrong");
 
 		// =============== Boundary Values Tests ==================
 
-		// distance from a point to itself should be 0
+		// TC03: distance from a point to itself should be 0
 		assertEquals(0, p1.distance(p1), DELTA, "ERROR: point distance to itself is not zero");
 
 	}
