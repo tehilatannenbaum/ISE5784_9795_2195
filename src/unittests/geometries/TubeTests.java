@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * the correctness of the Tube's methods.
  */
 class TubeTests {
-	
+
 	/**
 	 * 
 	 * Test method for {@link geometries.Tube#getNormal(primitives.Point)}.

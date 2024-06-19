@@ -30,7 +30,7 @@ public class Tube extends RadialGeometry implements Intersectable {
 	@Override
 	public Vector getNormal(Point p) {
 		// Calculate the projection of p-head on the direction vector dir
-		Vector headToP = p.subtract( axis.getHead());
+		Vector headToP = p.subtract(axis.getHead());
 		double length = axis.getDirection().dotProduct(headToP);
 		// Calculate the point O on the axis closest to point p
 		Point closestPoint = axis.getPoint(length);

@@ -81,8 +81,9 @@ public class Sphere extends RadialGeometry implements Intersectable {
 		double th = Math.sqrt(thSquared);
 		// Distance from ray origin to the first and second intersection point, t1 < t2
 		double t2 = alignZero(tm + th);
-		if (t2 <= 0) return null;
-		
+		if (t2 <= 0)
+			return null;
+
 		double t1 = alignZero(tm - th);
 		return t1 <= 0 ? List.of(ray.getPoint(t2)) //
 				: List.of(ray.getPoint(t1), ray.getPoint(t2));

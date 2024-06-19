@@ -32,7 +32,7 @@ public class Triangle extends Polygon implements Intersectable {
 	 */
 	@Override
 	public List<Point> findIntersections(Ray ray) {
-		
+
 		var rayHead = ray.getHead();
 		var rayDirection = ray.getDirection();
 

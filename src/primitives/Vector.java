@@ -54,7 +54,7 @@ public class Vector extends Point {
 	 *         specified scalar value
 	 */
 	public Vector scale(double scalar) {
-		return new Vector(this.xyz.d1 * scalar, this.xyz.d2 * scalar, this.xyz.d3 * scalar);
+		return new Vector(this.xyz.scale(scalar));
 	}
 
 	/**
@@ -64,10 +64,7 @@ public class Vector extends Point {
 	 * @return The dot product of this vector with the specified vector
 	 */
 	public double dotProduct(Vector vec) {
-		if (vec != null)
 			return this.xyz.d1 * vec.xyz.d1 + this.xyz.d2 * vec.xyz.d2 + this.xyz.d3 * vec.xyz.d3;
-		else
-			return 0.0;
 	}
 
 	/**
@@ -109,11 +106,9 @@ public class Vector extends Point {
 	 * @return A new vector that is the normalized version of this vector
 	 */
 	public Vector normalize() {
-		double length = length();
-		return new Vector(xyz.d1 / length, xyz.d2 / length, xyz.d3 / length);
+		return this.scale(1 / this.length());
 	}
 
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -121,7 +116,6 @@ public class Vector extends Point {
 		return obj instanceof Vector && super.equals(obj);
 	}
 
-	
 	@Override
 	public String toString() {
 		return "v" + super.toString();

@@ -219,7 +219,8 @@ class VectorTests {
 		assertThrows(IllegalArgumentException.class, () -> vec.crossProduct(u),
 				"ERROR: the normalized vector is not parallel to the original one");
 
-		// TC03: Dot product between parallel vectors equals the product of their lengths
+		// TC03: Dot product between parallel vectors equals the product of their
+		// lengths
 		assertEquals(vec.dotProduct(u), vec.length(), DELTA,
 				"ERROR: the normalized vector is not parallel to the original one");
 	}

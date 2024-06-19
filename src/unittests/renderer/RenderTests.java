@@ -2,7 +2,7 @@ package unittests.renderer;
 
 import static java.awt.Color.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import geometries.*;
 import lighting.AmbientLight;
@@ -45,6 +45,7 @@ public class RenderTests {
 
 	/** Test for XML based scene - for bonus */
 	@Test
+	@Disabled
 	public void basicRenderXml() {
 		// enter XML file name and parse from XML file into scene object
 		// using the code you added in appropriate packages

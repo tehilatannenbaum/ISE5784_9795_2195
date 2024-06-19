@@ -85,14 +85,14 @@ public class Camera implements Cloneable {
 	 * @return the constructed ray through the pixel
 	 */
 	public Ray constructRay(int nX, int nY, int j, int i) {
-		Point pCenter = p0.add(vTo.scale(distance));
 		double rY = height / nY;
 		double rX = width / nX;
 
 		double yi = -(i - (nY - 1) / 2d) * rY;
 		double xj = (j - (nX - 1) / 2d) * rX;
 
-		Point pij = pCenter;
+		Point pij = p0.add(vTo.scale(distance));
+		;
 
 		if (!Util.isZero(xj)) {
 			pij = pij.add(vRight.scale(xj));
@@ -105,12 +105,6 @@ public class Camera implements Cloneable {
 		return new Ray(p0, pij.subtract(p0));
 	}
 
-	/**
-	 * Creates and returns a copy of this Camera.
-	 *
-	 * @return a clone of this Camera
-	 * @throws AssertionError if cloning is not supported
-	 */
 	@Override
 	public Camera clone() {
 		try {
