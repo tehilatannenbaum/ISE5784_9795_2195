@@ -9,7 +9,7 @@ import java.util.List;
  * Represents a triangle in three-dimensional space. A triangle is a type of
  * polygon with three vertices.
  */
-public class Triangle extends Polygon implements Intersectable {
+public class Triangle extends Polygon {
 
 	/**
 	 * Constructs a triangle with three vertices. The vertices are specified in

@@ -12,7 +12,7 @@ import java.util.List;
  * and height. Inherits from the Tube class, representing a tube with zero
  * thickness.
  */
-public class Cylinder extends Tube implements Intersectable {
+public class Cylinder extends Tube {
 
 	/** The height of the cylinder */
 	private final double height;

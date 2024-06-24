@@ -13,7 +13,7 @@ import java.util.List;
  * group. Implements the Intersectable interface based on the Composite design
  * pattern.
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
 
 	/**
 	 * List containing intersectable geometries.

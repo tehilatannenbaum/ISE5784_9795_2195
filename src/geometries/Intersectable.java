@@ -7,7 +7,7 @@ import primitives.Ray;
 /**
  * Interface for geometrical objects that can be intersected by rays.
  */
-public interface Intersectable {
+public abstract class Intersectable {
 
 	/**
 	 * Finds intersection points between the intersectable object and a given ray.
@@ -16,5 +16,11 @@ public interface Intersectable {
 	 * @return A list of intersection points with the ray. Returns null if there are
 	 *         no intersections.
 	 */
-	List<Point> findIntersections(Ray ray);
+	public List<Point> findIntersections(Ray ray);
+	
+	public static class GeoPoint {
+		 public Geometry geometry;
+		 public Point point;
+		}
+
 }

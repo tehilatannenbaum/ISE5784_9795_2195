@@ -1,19 +1,44 @@
 package geometries;
 
+import java.awt.Color;
 import primitives.Point;
 import primitives.Vector;
 
 /**
- * Represents a geometric shape in 3D space. This interface defines methods for
- * obtaining the normal vector at a given point on the shape.
+ * Abstract class representing a geometric shape in 3D space.
+ * This class extends the {@link Intersectable} class and provides
+ * additional properties and methods common to all geometric shapes.
  */
-public interface Geometry extends Intersectable {
+public abstract class Geometry extends Intersectable {
 
-	/**
-	 * Computes and returns the normal vector to the geometry at a given point.
-	 * 
-	 * @param p The point on the geometry's surface for which to compute the normal
-	 * @return The normal vector to the geometry at the specified point
-	 */
-	Vector getNormal(Point p);
+    /**
+     * Gets the normal vector to the geometry at a given point.
+     * 
+     * @param p the point at which to get the normal vector
+     * @return the normal vector at the given point
+     */
+    abstract public Vector getNormal(Point p);
+
+    /**
+     * The emission color of the geometry.
+     */
+    protected Color emission = Color.BLACK;
+
+    /**
+     * Gets the emission color of the geometry.
+     * 
+     * @return the emission color
+     */
+    Color getEmission() {
+        return emission;
+    }
+
+    /**
+     * Sets the emission color of the geometry.
+     * 
+     * @param color the new emission color
+     */
+    void setEmission(Color color) {
+        this.emission = color;
+    }
 }

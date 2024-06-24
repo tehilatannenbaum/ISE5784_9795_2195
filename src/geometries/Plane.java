@@ -12,7 +12,7 @@ import java.util.List;
  * Represents a plane in 3D space. A plane is defined by either three points or
  * a point and a normal vector.
  */
-public class Plane implements Geometry, Intersectable {
+public class Plane extends Geometry {
 
 	/** A point on the plane */
 	private final Point p;

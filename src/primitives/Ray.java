@@ -2,6 +2,7 @@
 package primitives;
 
 import java.util.List;
+
 import static primitives.Util.*;
 
 /**
@@ -21,7 +22,8 @@ public class Ray {
 	 * @return The point at distance t along the ray
 	 */
 	public Point getPoint(double t) {
-		return isZero(t) ? head : head.add(direction.scale(t)); // p(t) = head + t * direction
+		// p(t) = head + t * direction
+		return isZero(t) ? head : head.add(direction.scale(t)); 
 	}
 
 	/**
@@ -46,7 +48,7 @@ public class Ray {
 	 * Constructs a new Ray with the given starting point and direction vector.
 	 * 
 	 * @param p   The starting point (head) of the ray
-	 * @param vec The direction vector of the ray
+	 * @param direction The direction vector of the ray
 	 */
 	public Ray(Point p, Vector vec) {
 		// Normalize the direction vector to ensure it represents a unit vector
