@@ -11,7 +11,7 @@ public class Point {
 	protected final Double3 xyz;
 
 	/** The origin point (0, 0, 0) */
-	public static final Point ZERO = new Point(0, 0, 0);
+	public static final Point ZERO = new Point(Double3.ZERO);
 
 	/**
 	 * Constructs a new Point with the given coordinates.
@@ -40,11 +40,7 @@ public class Point {
 	 * @return The vector from this point to the given point
 	 */
 	public Vector subtract(Point p) {
-		Double3 result = this.xyz.subtract(p.xyz);
-		if (result.equals(Double3.ZERO)) {
-			throw new IllegalArgumentException("Vector can't be zero");
-		}
-		return new Vector(result);
+		return new Vector(this.xyz.subtract(p.xyz));
 	}
 
 	/**
@@ -68,7 +64,7 @@ public class Point {
 		double dy = this.xyz.d2 - p.xyz.d2;
 		double dz = this.xyz.d3 - p.xyz.d3;
 
-		return (dx * dx + dy * dy + dz * dz);
+		return dx * dx + dy * dy + dz * dz;
 	}
 
 	/**
