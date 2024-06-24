@@ -180,9 +180,8 @@ public class Camera implements Cloneable {
 		 * @return the Builder instance
 		 */
 		public Builder setLocation(Point location) {
-			if (location == null) {
+			if (location == null)
 				throw new IllegalArgumentException("location cannot be null");
-			}
 			camera.p0 = location;
 			return this;
 		}
@@ -227,9 +226,8 @@ public class Camera implements Cloneable {
 		 * @return the Builder instance
 		 */
 		public Builder setVpDistance(double distance) {
-			if (distance <= 0) {
+			if (distance <= 0)
 				throw new IllegalArgumentException("View plane distance must be positive");
-			}
 			camera.distance = distance;
 			return this;
 		}
@@ -266,13 +264,12 @@ public class Camera implements Cloneable {
 		 */
 		public Camera build() {
 			if (camera.p0 == null || camera.vTo == null || camera.vUp == null || camera.vRight == null
-					|| camera.width == 0 || camera.height == 0 || camera.distance == 0)
+					|| !isZero(camera.vTo.dotProduct(camera.vUp)) || camera.width <= 0 || camera.height <= 0
+					|| camera.distance <= 0)
 				throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "");
 
 			if (camera.imageWriter == null || camera.rayTracer == null)
 				throw new MissingResourceException("Missing ImageWriter or RayTracer", Camera.class.getName(), "");
-
-			camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
 
 			try {
 				return (Camera) camera.clone();

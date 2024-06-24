@@ -24,8 +24,8 @@ public abstract class RayTracerBase {
 	}
 
 	/**
-	 * The method is responsible for tracing a ray and computing the color of the closest
-	 * object it intersects.
+	 * The method is responsible for tracing a ray and computing the color of the
+	 * closest object it intersects.
 	 * 
 	 * @param ray The ray to be traced.
 	 * @return The color of the closest object intersected by the ray.

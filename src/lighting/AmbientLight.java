@@ -18,22 +18,22 @@ public class AmbientLight {
 	 * Constructor to initialize ambient light with given color and attenuation
 	 * factors.
 	 *
-	 * @param Ia The original light intensity as a Color.
-	 * @param Ka The attenuation factors as a Double3.
+	 * @param ia The original light intensity as a Color.
+	 * @param ka The attenuation factors as a Double3.
 	 */
-	public AmbientLight(Color Ia, Double3 Ka) {
-		this.intensity = Ia.scale(Ka);
+	public AmbientLight(Color ia, Double3 ka) {
+		this.intensity = ia.scale(ka);
 	}
 
 	/**
 	 * Constructor to initialize ambient light with given color and a single
 	 * attenuation factor.
 	 *
-	 * @param Ia The original light intensity as a Color.
-	 * @param Ka The attenuation factor as a double.
+	 * @param ia The original light intensity as a Color.
+	 * @param ka The attenuation factor as a double.
 	 */
-	public AmbientLight(Color Ia, double Ka) {
-		this.intensity = Ia.scale(Ka);
+	public AmbientLight(Color ia, double ka) {
+		this.intensity = ia.scale(ka);
 	}
 
 	/**
