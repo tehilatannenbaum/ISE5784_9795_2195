@@ -12,7 +12,7 @@ public abstract class RayTracerBase {
 	/**
 	 * The scene to be rendered.
 	 */
-	protected Scene scene;
+	protected final Scene scene;
 
 	/**
 	 * Constructor for RayTracerBase, initializing with the given scene.
@@ -24,7 +24,7 @@ public abstract class RayTracerBase {
 	}
 
 	/**
-	 * Abstract method for tracing a ray and computing the color of the closest
+	 * The method is responsible for tracing a ray and computing the color of the closest
 	 * object it intersects.
 	 * 
 	 * @param ray The ray to be traced.

@@ -1,9 +1,10 @@
 package geometries;
 
 import primitives.Point;
+import static primitives.Util.*;
+
 import primitives.Vector;
 import primitives.Ray;
-import primitives.Util;
 import java.util.List;
 
 /**
@@ -14,7 +15,6 @@ import java.util.List;
 public class Cylinder extends Tube implements Intersectable {
 
 	/** The height of the cylinder */
-	@SuppressWarnings("unused")
 	private final double height;
 
 	/**
@@ -31,6 +31,7 @@ public class Cylinder extends Tube implements Intersectable {
 
 	@Override
 	public Vector getNormal(Point p) {
+
 		Point head = axis.getHead();
 		Vector dir = axis.getDirection();
 		// Calculate projection of p-head on the direction vector
@@ -38,19 +39,20 @@ public class Cylinder extends Tube implements Intersectable {
 			return dir;
 		double length = dir.dotProduct(p.subtract(head));
 		// Check if the point is on the bottom base
-		if (Util.isZero(length))
+		if (isZero(length))
 			return dir.scale(-1);
 		// Check if the point is on the top base
-		if (Util.isZero(length - height))
+		if (isZero(length - height))
 			return dir;
 		// The point is on the lateral surface
-		Point closestPoint = head.add(dir.scale(length)); // The projection point on the axis
+		Point closestPoint = axis.getPoint(length); // The projection point on the axis
 		return p.subtract(closestPoint).normalize();
+
 	}
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
 		return null;
-		// :TODO add javadoc, implement function
+		// TODO implement function
 	}
 }

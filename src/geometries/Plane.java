@@ -1,9 +1,10 @@
 package geometries;
 
+import static primitives.Util.*;
+
 import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
-import primitives.Util;
 
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class Plane implements Geometry, Intersectable {
 		// Calculate nv
 		double nv = normal.dotProduct(v);
 		// If nv is zero, the ray is parallel to the plane (no intersections)
-		if (Util.isZero(nv))
+		if (isZero(nv))
 			return null;
 
 		Vector pMinusP0;
@@ -90,7 +91,7 @@ public class Plane implements Geometry, Intersectable {
 			return null;
 		}
 		// Calculate n * (p - p0) / nv
-		double t = Util.alignZero(normal.dotProduct(pMinusP0) / nv);
+		double t = alignZero(normal.dotProduct(pMinusP0) / nv);
 
 		// If t is negative, the intersection point is behind the ray's origin (no
 		// intersection) and Return the intersection point as a list otherwise

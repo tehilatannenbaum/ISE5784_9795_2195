@@ -6,6 +6,8 @@ import primitives.*;
 
 import java.util.List;
 import renderer.*;
+import scene.Scene;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -19,7 +21,9 @@ public class IntegrationTests {
 	 * camera is directed along the negative z-axis with the up vector along the
 	 * y-axis, and the viewport size is set to 3x3.
 	 */
-	private final Camera.Builder cameraBuilder = Camera.getBuilder()
+	private final Camera.Builder cameraBuilder = Camera.getBuilder() //
+			.setImageWriter(new ImageWriter("no image", 1, 1)) //
+			.setRayTracer(new SimpleRayTracer(new Scene("unused"))) //
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setVpSize(3, 3);
 
 	/**

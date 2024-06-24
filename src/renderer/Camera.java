@@ -7,7 +7,8 @@ import primitives.Util;
 import primitives.Vector;
 import primitives.Color;
 import java.util.MissingResourceException;
-import scene.*;
+
+import static primitives.Util.*;
 
 /**
  * Represents a camera in 3D space. The camera is used to generate rays through
@@ -92,26 +93,12 @@ public class Camera implements Cloneable {
 		double xj = (j - (nX - 1) / 2d) * rX;
 
 		Point pij = p0.add(vTo.scale(distance));
-		;
-
-		if (!Util.isZero(xj)) {
+		if (!isZero(xj))
 			pij = pij.add(vRight.scale(xj));
-		}
-
-		if (!Util.isZero(yi)) {
+		if (!isZero(yi))
 			pij = pij.add(vUp.scale(yi));
-		}
 
 		return new Ray(p0, pij.subtract(p0));
-	}
-
-	@Override
-	public Camera clone() {
-		try {
-			return (Camera) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new AssertionError();
-		}
 	}
 
 	/**
@@ -208,12 +195,10 @@ public class Camera implements Cloneable {
 		 * @return the Builder instance
 		 */
 		public Builder setDirection(Vector vTo, Vector vUp) {
-			if (vTo == null || vUp == null) {
+			if (vTo == null || vUp == null)
 				throw new IllegalArgumentException("Direction vectors cannot be null");
-			}
-			if (!Util.isZero(vTo.dotProduct(vUp))) {
+			if (!isZero(vTo.dotProduct(vUp)))
 				throw new IllegalArgumentException("vTo and vUp must be orthogonal");
-			}
 			camera.vTo = vTo.normalize();
 			camera.vUp = vUp.normalize();
 			camera.vRight = vTo.crossProduct(vUp).normalize();
@@ -228,9 +213,8 @@ public class Camera implements Cloneable {
 		 * @return the Builder instance
 		 */
 		public Builder setVpSize(double width, double height) {
-			if (width <= 0 || height <= 0) {
+			if (alignZero(width) <= 0 || alignZero(height) <= 0)
 				throw new IllegalArgumentException("View plane dimensions must be positive");
-			}
 			camera.width = width;
 			camera.height = height;
 			return this;
@@ -282,17 +266,21 @@ public class Camera implements Cloneable {
 		 */
 		public Camera build() {
 			if (camera.p0 == null || camera.vTo == null || camera.vUp == null || camera.vRight == null
-					|| camera.width == 0 || camera.height == 0 || camera.distance == 0) {
+					|| camera.width == 0 || camera.height == 0 || camera.distance == 0)
 				throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "");
-			}
-			// if (camera.imageWriter == null || camera.rayTracer == null) {
-			// throw new MissingResourceException("Missing ImageWriter or RayTracer",
-			// Camera.class.getName(), "");
-			// }
+
+			if (camera.imageWriter == null || camera.rayTracer == null)
+				throw new MissingResourceException("Missing ImageWriter or RayTracer", Camera.class.getName(), "");
+
 			camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
 
-			return (Camera) camera.clone();
+			try {
+				return (Camera) camera.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new AssertionError();
+			}
 		}
+
 	}
 
 	/**

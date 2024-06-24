@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import primitives.*;
 import renderer.*;
-//import scene.Scene;
+import scene.Scene;
 
 /**
  * Testing Camera Class
@@ -16,8 +16,8 @@ import renderer.*;
 class CameraTest {
 	/** Camera builder for the tests */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
-			// .setRayTracer(new SimpleRayTracer(new Scene("Test")))
-			// .setImageWriter(new ImageWriter("Test", 1, 1))
+			.setRayTracer(new SimpleRayTracer(new Scene("Test")))
+			.setImageWriter(new ImageWriter("Test", 1, 1))
 			.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(10);
 
 	/**
@@ -29,7 +29,11 @@ class CameraTest {
 
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: 4X4 Inside (1,1)
-		Camera camera1 = cameraBuilder.setVpSize(8, 8).build();
+		Camera camera1 = cameraBuilder //
+				.setVpSize(8, 8) //
+				.setImageWriter(new ImageWriter("no image", 1, 1)) //
+				.setRayTracer(new SimpleRayTracer(new Scene("unused"))) //
+				.build();
 		assertEquals(new Ray(Point.ZERO, new Vector(1, -1, -10)), camera1.constructRay(4, 4, 1, 1), badRay);
 
 		// =============== Boundary Values Tests ==================
