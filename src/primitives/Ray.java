@@ -1,7 +1,7 @@
-
 package primitives;
 
 import java.util.List;
+import geometries.Intersectable.GeoPoint;
 
 import static primitives.Util.*;
 
@@ -23,22 +23,22 @@ public class Ray {
 	 */
 	public Point getPoint(double t) {
 		// p(t) = head + t * direction
-		return isZero(t) ? head : head.add(direction.scale(t)); 
+		return isZero(t) ? head : head.add(direction.scale(t));
 	}
 
 	/**
-	 * Returns the head point of this object.
+	 * Returns the head point of this Ray object.
 	 *
-	 * @return the head point.
+	 * @return The head point.
 	 */
 	public Point getHead() {
 		return head;
 	}
 
 	/**
-	 * Returns the direction vector of this object.
+	 * Returns the direction vector of this Ray object.
 	 *
-	 * @return the direction vector.
+	 * @return The direction vector.
 	 */
 	public Vector getDirection() {
 		return direction;
@@ -47,18 +47,18 @@ public class Ray {
 	/**
 	 * Constructs a new Ray with the given starting point and direction vector.
 	 * 
-	 * @param p   The starting point (head) of the ray
+	 * @param p         The starting point (head) of the ray
 	 * @param direction The direction vector of the ray
 	 */
-	public Ray(Point p, Vector vec) {
+	public Ray(Point p, Vector direction) {
 		// Normalize the direction vector to ensure it represents a unit vector
 		head = p;
-		direction = vec.normalize();
+		this.direction = direction.normalize();
 	}
 
 	/**
-	 * Checks whether this Ray is equal to another object. Two rays are considered
-	 * equal if they have the same head and direction.
+	 * Checks whether this Ray object is equal to another object. Two rays are
+	 * considered equal if they have the same head and direction.
 	 * 
 	 * @param obj The object to compare with this Ray
 	 * @return true if the given object is equal to this Ray, false otherwise
@@ -71,8 +71,8 @@ public class Ray {
 	}
 
 	/**
-	 * Returns a string representation of this Ray. The string contains the head
-	 * point and the direction vector of the ray.
+	 * Returns a string representation of this Ray object. The string contains the
+	 * head point and the direction vector of the ray.
 	 * 
 	 * @return A string representation of this Ray
 	 */
@@ -82,31 +82,40 @@ public class Ray {
 	}
 
 	/**
-	 * Finds the closest point to the ray's start point from a collection of points.
+	 * Finds the closest GeoPoint to the ray's head among a list of GeoPoints.
 	 * 
-	 * @param points The collection of points.
-	 * @return The point closest to the ray's start point, or null if the collection
-	 *         is empty.
+	 * @param intersections List of GeoPoints to check
+	 * @return The closest GeoPoint, or null if the list is empty or null
 	 */
-	public Point findClosestPoint(List<Point> points) {
-		if (points == null || points.isEmpty())
+	public GeoPoint findClosestGeoPoint(List<GeoPoint> intersections) {
+		if (intersections == null || intersections.isEmpty())
 			return null;
 
-		Point closestPoint = null;
+		GeoPoint closestGeoPoint = null;
 		double minDistance = Double.POSITIVE_INFINITY;
 
 		// Iterate through each point in the list
-		for (Point point : points) {
-			double distance = head.distance(point);
+		for (GeoPoint point : intersections) {
+			double distance = point.point.distance(head);
 
 			// Update the closest point if the current point is closer
 			if (distance < minDistance) {
 				minDistance = distance;
-				closestPoint = point;
+				closestGeoPoint = point;
 			}
 		}
 
-		return closestPoint;
+		return closestGeoPoint;
 	}
 
+	/**
+	 * Finds the closest Point to the ray's head among a list of Points.
+	 * 
+	 * @param points List of Points to check
+	 * @return The closest Point, or null if the list is empty or null
+	 */
+	public Point findClosestPoint(List<Point> points) {
+		return points == null || points.isEmpty() ? null
+				: findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+	}
 }

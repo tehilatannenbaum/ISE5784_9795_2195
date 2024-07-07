@@ -14,7 +14,7 @@ import static primitives.Util.*;
  * Represents a sphere in three-dimensional space. A sphere is a type of radial
  * geometry with a center point and a radius.
  */
-public class Sphere extends RadialGeometry  {
+public class Sphere extends RadialGeometry {
 
 	/** The center point of the sphere */
 	private final Point center;
@@ -52,14 +52,15 @@ public class Sphere extends RadialGeometry  {
 	 */
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		Point p0 = ray.getHead();
 		Vector v = ray.getDirection();
 
 		// If the ray starts at the center of the sphere, there's only one intersection
 		// point
 		if (p0.equals(center)) {
-			return List.of(ray.getPoint(radius));
+			return List.of(new GeoPoint(this, ray.getPoint(radius)));
+
 		}
 		// Vector from ray origin to sphere center
 		Vector u = center.subtract(p0);
@@ -85,8 +86,8 @@ public class Sphere extends RadialGeometry  {
 			return null;
 
 		double t1 = alignZero(tm - th);
-		return t1 <= 0 ? List.of(ray.getPoint(t2)) //
-				: List.of(ray.getPoint(t1), ray.getPoint(t2));
+		return t1 <= 0 ? List.of(new GeoPoint(this, ray.getPoint(t2))) //
+				: List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
 	}
 
 }

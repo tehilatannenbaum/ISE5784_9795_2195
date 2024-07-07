@@ -9,7 +9,7 @@ import java.util.List;
  * Represents a tube in three-dimensional space. A tube is a type of radial
  * geometry with an axis defined by a ray and a radius.
  */
-public class Tube extends RadialGeometry  {
+public class Tube extends RadialGeometry {
 	/**
 	 * The axis of the tube, defined by a ray.
 	 */
@@ -38,7 +38,7 @@ public class Tube extends RadialGeometry  {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		return null;
 		// :TODO implement function
 	}

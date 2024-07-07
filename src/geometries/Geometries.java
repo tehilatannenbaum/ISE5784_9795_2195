@@ -45,20 +45,14 @@ public class Geometries extends Intersectable {
 		this.geometries.addAll(List.of(geometries));
 	}
 
-	/**
-	 * Finds the intersections of the ray with all the geometries in the collection.
-	 * 
-	 * @param ray The ray to check intersections with.
-	 * @return A list of intersection points, or null if no intersections are found.
-	 */
 	@Override
-	public List<Point> findIntersections(Ray ray) {
-		List<Point> intersections = null;
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+		List<GeoPoint> intersections = null;
 
 		// Iterate through all geometries
 		for (Intersectable geometry : geometries) {
 			// Find intersections with the current geometry
-			List<Point> tempIntersections = geometry.findIntersections(ray);
+			List<GeoPoint> tempIntersections = geometry.findGeoIntersectionsHelper(ray);
 
 			// If there are intersections, add them to the main intersections list
 			if (tempIntersections != null) {

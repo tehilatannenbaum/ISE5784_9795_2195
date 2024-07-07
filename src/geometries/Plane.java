@@ -74,7 +74,7 @@ public class Plane extends Geometry {
 	 * @return A list of intersection points, or null if there are no intersections
 	 */
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		Point p0 = ray.getHead();
 		Vector v = ray.getDirection();
 
@@ -95,6 +95,6 @@ public class Plane extends Geometry {
 
 		// If t is negative, the intersection point is behind the ray's origin (no
 		// intersection) and Return the intersection point as a list otherwise
-		return t <= 0 ? null : List.of(ray.getPoint(t));
+		return t <= 0 ? null : List.of(new GeoPoint(this, ray.getPoint(t)));
 	}
 }

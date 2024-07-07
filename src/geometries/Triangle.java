@@ -31,12 +31,12 @@ public class Triangle extends Polygon {
 	 *         no intersections.
 	 */
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
 		var rayHead = ray.getHead();
 		var rayDirection = ray.getDirection();
 
-		List<Point> intersections = plane.findIntersections(ray);
+		var intersections = plane.findIntersections(ray);
 		if (intersections == null)
 			// If there are no intersections with the plane, return null
 			return null;
@@ -61,7 +61,7 @@ public class Triangle extends Polygon {
 		if (result3 * result1 <= 0)
 			return null;
 
-		return intersections;
+		return List.of(new GeoPoint(this, intersections.getFirst()));
 	}
 
 }
