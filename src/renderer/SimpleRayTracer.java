@@ -16,6 +16,11 @@ import static java.lang.Math.*;
  */
 public class SimpleRayTracer extends RayTracerBase {
 
+    /** 
+     * Offset size for the origin of shadow rays. 
+     **/
+	private static final double DELTA = 0.1;
+
 	/**
 	 * Constructor for SimpleRayTracer, initializing with the given scene.
 	 * 
@@ -76,12 +81,13 @@ public class SimpleRayTracer extends RayTracerBase {
 		Color color = geometry.getEmission();
 
 		for (LightSource lightSource : scene.lights) {
-			Vector l = lightSource.getL(point);
-			double nl = alignZero(n.dotProduct(l));
-			if ((nl * nv > 0)) { // && unshaded(geoPoint, lightSource, l, n, nl)
-				Color iL = lightSource.getIntensity(point);
-				color = color.add(iL.scale(calcDiffuse(material, nl).add(calcSpecular(material, n, l, nl, v))));
-			}
+		    Vector l = lightSource.getL(point);
+		    double nl = alignZero(n.dotProduct(l));
+		    if ((nl * nv > 0) && unshaded(geoPoint,lightSource, l, n)) {
+		        Color iL = lightSource.getIntensity(point);
+		        color = color.add(iL.scale(calcDiffuse(material, nl).add(calcSpecular(material, n, l, nl, v))));
+		    }
+		
 		}
 		return color;
 	}
@@ -117,4 +123,38 @@ public class SimpleRayTracer extends RayTracerBase {
 
 		return material.kS.scale(pow(max, material.nShininess));
 	}
-}
+	/**
+     * Checks if the point is unshaded by any other geometry from the light source.
+     * 
+     * @param gp The point on the geometry in the scene.
+     * @param lightSource The light source.
+     * @param l  The vector from the point to the light source.
+     * @param n  The normal vector at the point.
+     * @return true if the point is unshaded, false if it is in shadow.
+     */
+  private boolean unshaded(GeoPoint gp, LightSource lightSource, Vector l, Vector n) {
+
+    	// from point to light source
+        Vector lightDirection = l.scale(-1); 
+        Point point = gp.point;
+        Vector delta = n.scale(n.dotProduct(lightDirection) > 0 ? DELTA : -DELTA);
+        Point pointToCheck = point.add(delta);
+        Ray lightRay = new Ray(pointToCheck, lightDirection);
+
+        var intersections = scene.geometries.findGeoIntersections(lightRay);
+
+        if (intersections == null || intersections.isEmpty())
+        	return true;
+        
+        var lightDistance = lightSource.getDistance(point);
+        for (GeoPoint intersection : intersections) {
+        	if (alignZero(intersection.point.distance(point) - lightDistance) <= 0) {
+        		return false;
+        	}
+        }
+        
+        return true;
+    }
+	
+	}
+
