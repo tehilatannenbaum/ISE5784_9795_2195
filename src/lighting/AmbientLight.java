@@ -24,7 +24,7 @@ public class AmbientLight extends Light {
 		super(ia.scale(ka));
 
 	}
-	
+
 	/**
 	 * Constructor to initialize ambient light with given color and attenuation
 	 * factors.

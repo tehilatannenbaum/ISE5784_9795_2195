@@ -16,6 +16,11 @@ public class Ray {
 	private final Vector direction;
 
 	/**
+	 * Offset size for the origin of shadow rays.
+	 **/
+	private static final double DELTA = 0.1;
+
+	/**
 	 * Returns the point at a distance t along the ray.
 	 * 
 	 * @param t The distance along the ray
@@ -54,6 +59,20 @@ public class Ray {
 		// Normalize the direction vector to ensure it represents a unit vector
 		head = p;
 		this.direction = direction.normalize();
+	}
+
+	/**
+	 * Constructs a new Ray with the given starting point and direction vector and
+	 * Normal vector.
+	 * 
+	 * @param normal    to move by
+	 * @param point     the starting point before moving
+	 * @param direction the direction of the ray
+	 */
+	public Ray(Point point, Vector direction, Vector normal) {
+		this.direction = direction.normalize();
+		double dotProduct = alignZero(this.direction.dotProduct(normal));
+		this.head = dotProduct == 0 ? point : point.add(normal.scale(dotProduct < 0 ? -DELTA : DELTA));
 	}
 
 	/**
