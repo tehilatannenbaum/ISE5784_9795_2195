@@ -1,6 +1,5 @@
 package unittests.renderer;
 
-import static java.awt.Color.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +17,11 @@ public class SceneTest {
 	/** Scene for the tests */
 	private final Scene scene = new Scene("Test scene");
 
+	/**
+	 * A builder for the Camera object, initialized with a direction and a simple ray tracer for the scene.
+	 * The direction of the camera is set to face along the negative z-axis with the up vector along the positive y-axis.
+	 * A SimpleRayTracer is used for tracing rays in the given scene.
+	 */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setRayTracer(new SimpleRayTracer(scene));
 
@@ -89,11 +93,8 @@ public class SceneTest {
 			for (int j = 0; j < 10; j++) {
 				double x = clusterX + Math.random() * 10 - 5;
 				double z = clusterZ + Math.random() * 10 - 5;
-				scene.geometries.add(new Sphere(new Point(x, -110, z), 2d).setEmission(new Color(105, 105, 105)) // Dark
-																													// gray
-																													// color
-																													// for
-																													// pebbles
+				scene.geometries.add(new Sphere(new Point(x, -110, z), 2d).setEmission(new Color(105, 105, 105))
+
 						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50)));
 			}
 		}

@@ -68,11 +68,13 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the color at a given intersection point.
-	 * 
-	 * @param geoPoint The intersection point.
-	 * @param ray      The ray from the camera to the intersection.
-	 * @return The color at the intersection point.
+	 * Calculates the color at a given geometric point in the scene for a specified ray.
+	 * The method considers multiple levels of reflection and refraction to compute the final color.
+	 * Ambient light intensity from the scene is also added to the result.
+	 *
+	 * @param gp  the geometric point for which the color is calculated
+	 * @param ray the ray that intersects the geometric point
+	 * @return the calculated color at the given geometric point
 	 */
 	private Color calcColor(GeoPoint gp, Ray ray) {
 		return calcColor(gp, ray, MAX_CALC_COLOR_LEVEL, INITIAL_K).add(scene.ambientLight.getIntensity());
@@ -180,6 +182,15 @@ public class SimpleRayTracer extends RayTracerBase {
 		return true;
 	}
 
+	/**
+	 * Calculates the transparency factor at a given geometric point in the scene.
+	 * 
+	 * @param gp         the geometric point at which transparency is being calculated
+	 * @param l          the direction vector from the point to the light source
+	 * @param n          the normal vector at the geometric point
+	 * @param lightSource the light source affecting the transparency
+	 * @return the transparency factor at the given geometric point, represented as a {@link Double3} value
+	 */
 	private Double3 transparency(GeoPoint gp, Vector l, Vector n, LightSource lightSource) {
 
 		// from point to light source
@@ -208,12 +219,12 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Constructs the reflection ray for the given intersection point.
+	 * Constructs a reflected ray at a given geometric point.
 	 *
-	 * @param gp  The intersection point on the geometry.
-	 * @param ray The incident ray.
-	 * @param n   The normal vector at the intersection point.
-	 * @return The reflection ray.
+	 * @param gp the geometric point where the reflection occurs
+	 * @param v  the direction vector of the incoming ray
+	 * @param n  the normal vector at the point of intersection
+	 * @return the reflected ray, or null if the dot product of the direction vector and the normal is zero
 	 */
 	private Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n) {
 		double vn = alignZero(v.dotProduct(n));
