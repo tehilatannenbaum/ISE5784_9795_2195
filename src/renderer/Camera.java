@@ -3,7 +3,6 @@ package renderer;
 import primitives.Point;
 
 import primitives.Ray;
-import primitives.Util;
 import primitives.Vector;
 import primitives.Color;
 import java.util.MissingResourceException;

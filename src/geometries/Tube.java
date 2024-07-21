@@ -38,7 +38,7 @@ public class Tube extends RadialGeometry {
 	}
 
 	@Override
-	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		return null;
 		// :TODO implement function
 	}

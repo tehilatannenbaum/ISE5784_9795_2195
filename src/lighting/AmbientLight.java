@@ -22,7 +22,6 @@ public class AmbientLight extends Light {
 	 */
 	public AmbientLight(Color ia, Double3 ka) {
 		super(ia.scale(ka));
-
 	}
 
 	/**
@@ -34,15 +33,6 @@ public class AmbientLight extends Light {
 	 */
 	public AmbientLight(Color ia, Double ka) {
 		super(ia.scale(ka));
-
 	}
 
-	/**
-	 * Get the intensity of the ambient light.
-	 *
-	 * @return The ambient light intensity as a Color.
-	 */
-	public Color getIntensity() {
-		return intensity;
-	}
 }

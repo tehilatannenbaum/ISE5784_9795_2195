@@ -1,53 +1,76 @@
+
 package lighting;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Util;
+import primitives.Vector;
 
-import static primitives.Util.*;
+import static primitives.Util.alignZero;
 
-/**
- * Class representing a spot light source in the scene. A spot light source
- * emits light from a specific position and direction with attenuation.
- */
 public class SpotLight extends PointLight {
+	private Vector dir;
+	private double NarrowBeam = 1;
 
 	/**
-	 * The direction vector of the spot light.
-	 */
-	private final Vector direction;
-
-	/**
-	 * Constructor to initialize the spot light with a given intensity, position,
-	 * and direction.
+	 * constructor for the intensity
 	 *
-	 * @param intensity The intensity of the light.
-	 * @param position  The position of the light source.
-	 * @param direction The direction of the light.
+	 * @param color     of the intensity of the source of the light
+	 * @param direction
 	 */
-	public SpotLight(Color intensity, Point position, Vector direction) {
-		super(intensity, position);
-		this.direction = direction.normalize();
+	public SpotLight(Color color, Point position, Vector direction) {
+		super(color, position);
+		this.dir = direction.normalize();
 	}
 
 	/**
-	 * Get the intensity of the light at a given point.
+	 * setkC function
 	 *
-	 * @param p The point to get the light intensity at.
-	 * @return The light intensity at the given point.
+	 * @param kc
+	 * @return
 	 */
+	public SpotLight setKc(double kc) {
+		super.setKc(kc);
+		return this;
+	}
+
+	/**
+	 * setkL function
+	 * 
+	 * @param kl
+	 * @return
+	 */
+	public SpotLight setKl(double kl) {
+		super.setKl(kl);
+		return this;
+	}
+
+	/**
+	 * setkQ function
+	 * 
+	 * @param kq
+	 * @return
+	 */
+	public SpotLight setKq(double kq) {
+		super.setKq(kq);
+		return this;
+	}
+
+	/**
+	 * setNarrowBeam function
+	 * 
+	 * @param NarrowBeam
+	 * @return
+	 */
+	public SpotLight setNarrowBeam(double NarrowBeam) {
+		this.NarrowBeam = NarrowBeam;
+		return this;
+	}
+
 	@Override
 	public Color getIntensity(Point p) {
-		double projection = alignZero(direction.dotProduct(getL(p)));
-		return (projection <= 0) ? Color.BLACK : super.getIntensity(p).scale(projection);
-	}
-
-	/**
-	 * Get the direction vector from the light source to a given point.
-	 *
-	 * @param p The point to get the direction vector to.
-	 * @return The direction vector from the light source to the given point.
-	 */
-	@Override
-	public Vector getL(Point p) {
-		return super.getL(p);
+		double cos = alignZero(dir.dotProduct(getL(p)));
+		return NarrowBeam != 1 ? super.getIntensity(p).scale(Math.pow(Math.max(0, dir.dotProduct(getL(p))), NarrowBeam))
+				: super.getIntensity(p).scale(Math.max(0, dir.dotProduct(getL(p))));
 	}
 }

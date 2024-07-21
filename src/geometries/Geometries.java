@@ -1,7 +1,5 @@
 package geometries;
 
-import primitives.Point;
-
 import primitives.Ray;
 
 import java.util.LinkedList;
@@ -52,7 +50,7 @@ public class Geometries extends Intersectable {
 		// Iterate through all geometries
 		for (Intersectable geometry : geometries) {
 			// Find intersections with the current geometry
-			List<GeoPoint> tempIntersections = geometry.findGeoIntersectionsHelper(ray);
+			List<GeoPoint> tempIntersections = geometry.findGeoIntersections(ray);
 
 			// If there are intersections, add them to the main intersections list
 			if (tempIntersections != null) {

@@ -10,7 +10,7 @@ abstract class Light {
 	/**
 	 * The intensity of the light source.
 	 */
-	protected Color intensity;
+	protected final Color intensity;
 
 	/**
 	 * Constructor to initialize the light intensity.

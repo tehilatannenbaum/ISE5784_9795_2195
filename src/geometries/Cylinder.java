@@ -5,7 +5,6 @@ import static primitives.Util.*;
 
 import primitives.Vector;
 import primitives.Ray;
-import java.util.List;
 
 /**
  * Represents a cylinder in 3D space. A cylinder is defined by its axis, radius,
@@ -50,9 +49,4 @@ public class Cylinder extends Tube {
 
 	}
 
-	@Override
-	public List<Point> findIntersections(Ray ray) {
-		return null;
-		// TODO implement function
-	}
 }

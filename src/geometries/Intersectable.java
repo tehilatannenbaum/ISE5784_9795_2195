@@ -1,8 +1,10 @@
 package geometries;
 
 import java.util.List;
+
 import primitives.Point;
 import primitives.Ray;
+import java.util.Objects;
 
 /**
  * Abstract class representing geometrical objects that can be intersected by
@@ -18,7 +20,7 @@ public abstract class Intersectable {
 	 * @return A list of Points representing intersection points with the ray, or
 	 *         null if no intersections are found.
 	 */
-	public List<Point> findIntersections(Ray ray) {
+	public final List<Point> findIntersections(Ray ray) {
 		var geoList = findGeoIntersections(ray);
 		return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
 	}
@@ -65,15 +67,6 @@ public abstract class Intersectable {
 			this.point = point;
 		}
 
-		/**
-		 * Compares this GeoPoint to the specified object. The result is true if and
-		 * only if the argument is not null and is a GeoPoint object that represents the
-		 * same geometry and point as this object.
-		 *
-		 * @param obj the object to compare this GeoPoint against.
-		 * @return true if the given object represents a GeoPoint equivalent to this
-		 *         GeoPoint, false otherwise.
-		 */
 		@Override
 		public boolean equals(Object obj) {
 			// Check if it's the same object
@@ -84,13 +77,13 @@ public abstract class Intersectable {
 				return false;
 			GeoPoint other = (GeoPoint) obj;
 			// Check if the geometry and point are the same
-			return this.geometry == other.geometry && this.point.equals(other.point);
+			return Objects.equals(this.geometry, other.geometry) && this.point.equals(other.point);
+
 		}
 
 		@Override
 		public String toString() {
-			return "GeoPoint [" + geometry + "," + point + "]";
-
+			return "GeoPoint{" + "geometry=" + this.geometry + ", point=" + this.point + '}';
 		}
 
 	}

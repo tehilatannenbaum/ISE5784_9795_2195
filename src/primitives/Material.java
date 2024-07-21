@@ -6,11 +6,11 @@ package primitives;
  */
 public class Material {
 	/**
-	 * Diffuse coefficien
+	 * Diffuse factor
 	 */
 	public Double3 kD = Double3.ZERO;
 	/**
-	 * Specular coefficient
+	 * Specular factor
 	 */
 	public Double3 kS = Double3.ZERO;
 	/**

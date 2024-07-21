@@ -17,11 +17,6 @@ import static java.lang.Math.*;
 public class SimpleRayTracer extends RayTracerBase {
 
 	/**
-	 * Offset size for the origin of shadow rays.
-	 **/
-	private static final double DELTA = 0.1;
-
-	/**
 	 * The maximum recursion level for color calculation.
 	 */
 	private static final int MAX_CALC_COLOR_LEVEL = 10;
@@ -110,16 +105,13 @@ public class SimpleRayTracer extends RayTracerBase {
 			Vector l = lightSource.getL(point);
 			double nl = alignZero(n.dotProduct(l));
 			if (nl * nv > 0) { // sign(nl) == sing(nv)
-
 				Double3 ktr = transparency(geoPoint, l, n, lightSource);
 				if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
 					Color iL = lightSource.getIntensity(geoPoint.point).scale(ktr); // the intensity of the light source
 					color = color.add(calcDiffusive(material.kD, nl, iL)
-							.add(calcSpecular(material.kS, n, l, v, geoPoint.geometry.getMaterial().nShininess, iL)));
+							.add(calcSpecular(material.kS, n, l, v, material.nShininess, iL)));
 				}
-
 			}
-
 		}
 		return color;
 	}
@@ -162,6 +154,8 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @param n           The normal vector at the point.
 	 * @return true if the point is unshaded, false if it is in shadow.
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated(forRemoval = true)
 	private boolean unshaded(GeoPoint gp, Vector l, Vector n, LightSource lightSource) {
 
 		// from point to light source

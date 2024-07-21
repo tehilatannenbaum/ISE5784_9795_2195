@@ -67,12 +67,12 @@ public class Ray {
 	 * 
 	 * @param normal    to move by
 	 * @param point     the starting point before moving
-	 * @param direction the direction of the ray
+	 * @param direction the direction of the ray - must be normalized
 	 */
 	public Ray(Point point, Vector direction, Vector normal) {
-		this.direction = direction.normalize();
-		double dotProduct = alignZero(this.direction.dotProduct(normal));
-		this.head = dotProduct == 0 ? point : point.add(normal.scale(dotProduct < 0 ? -DELTA : DELTA));
+		this.direction = direction;
+		double dotProduct = this.direction.dotProduct(normal);
+		this.head = point.add(normal.scale(dotProduct < 0 ? -DELTA : DELTA));
 	}
 
 	/**
@@ -115,8 +115,7 @@ public class Ray {
 
 		// Iterate through each point in the list
 		for (GeoPoint point : intersections) {
-			double distance = point.point.distance(head);
-
+			double distance = point.point.distanceSquared(head);
 			// Update the closest point if the current point is closer
 			if (distance < minDistance) {
 				minDistance = distance;
