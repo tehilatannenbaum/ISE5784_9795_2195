@@ -5,21 +5,22 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
-
 /**
- * The SpotLight class represents a light source that has a specific position and direction,
- * creating a beam of light that narrows as it moves away from the source. 
- * It extends the PointLight class, inheriting its position and color properties.
+ * The SpotLight class represents a light source that has a specific position
+ * and direction, creating a beam of light that narrows as it moves away from
+ * the source. It extends the PointLight class, inheriting its position and
+ * color properties.
  */
 public class SpotLight extends PointLight {
 	/**
-	 * The direction vector of the spot light. This vector indicates the direction in which the light is directed.
+	 * The direction vector of the spot light. This vector indicates the direction
+	 * in which the light is directed.
 	 */
 	private Vector dir;
 
 	/**
-	 * The narrowness of the beam of the spot light. A higher value results in a narrower beam.
-	 * Default value is 1.
+	 * The narrowness of the beam of the spot light. A higher value results in a
+	 * narrower beam. Default value is 1.
 	 */
 	private double NarrowBeam = 1;
 
@@ -36,11 +37,13 @@ public class SpotLight extends PointLight {
 	}
 
 	/**
-	 * Sets the constant attenuation factor for the spot light.
-	 * This method overrides the PointLight's setKc method to allow for method chaining with SpotLight.
+	 * Sets the constant attenuation factor for the spot light. This method
+	 * overrides the PointLight's setKc method to allow for method chaining with
+	 * SpotLight.
 	 *
 	 * @param kc the new constant attenuation factor
-	 * @return the current SpotLight instance with the updated constant attenuation factor
+	 * @return the current SpotLight instance with the updated constant attenuation
+	 *         factor
 	 */
 	public SpotLight setKc(double kc) {
 		super.setKc(kc);
@@ -48,11 +51,12 @@ public class SpotLight extends PointLight {
 	}
 
 	/**
-	 * Sets the linear attenuation factor for the spot light.
-	 * This method overrides the PointLight's setKl method to allow for method chaining with SpotLight.
+	 * Sets the linear attenuation factor for the spot light. This method overrides
+	 * the PointLight's setKl method to allow for method chaining with SpotLight.
 	 *
 	 * @param kl the new linear attenuation factor
-	 * @return the current SpotLight instance with the updated linear attenuation factor
+	 * @return the current SpotLight instance with the updated linear attenuation
+	 *         factor
 	 */
 	public SpotLight setKl(double kl) {
 		super.setKl(kl);
@@ -60,11 +64,13 @@ public class SpotLight extends PointLight {
 	}
 
 	/**
-	 * Sets the quadratic attenuation factor for the spot light.
-	 * This method overrides the PointLight's setKq method to allow for method chaining with SpotLight.
+	 * Sets the quadratic attenuation factor for the spot light. This method
+	 * overrides the PointLight's setKq method to allow for method chaining with
+	 * SpotLight.
 	 *
 	 * @param kq the new quadratic attenuation factor
-	 * @return the current SpotLight instance with the updated quadratic attenuation factor
+	 * @return the current SpotLight instance with the updated quadratic attenuation
+	 *         factor
 	 */
 	public SpotLight setKq(double kq) {
 		super.setKq(kq);
@@ -72,8 +78,8 @@ public class SpotLight extends PointLight {
 	}
 
 	/**
-	 * Sets the narrowness of the beam for the spot light.
-	 * A higher value results in a narrower beam.
+	 * Sets the narrowness of the beam for the spot light. A higher value results in
+	 * a narrower beam.
 	 *
 	 * @param NarrowBeam the new narrowness value for the beam
 	 * @return the current SpotLight instance with the updated narrow beam value

@@ -8,6 +8,9 @@ import geometries.*;
 import lighting.*;
 
 import static primitives.Util.*;
+
+import java.util.List;
+
 import static java.lang.Math.*;
 
 /**
@@ -51,6 +54,23 @@ public class SimpleRayTracer extends RayTracerBase {
 	public Color traceRay(Ray ray) {
 		GeoPoint closestPoint = findClosestIntersection(ray);
 		return closestPoint == null ? scene.background : calcColor(closestPoint, ray);
+
+	}
+
+	/**
+	 * Traces a list of rays and calculates the average color resulting from all
+	 * rays. For stage 1
+	 * 
+	 * @param rays the list of rays to be traced
+	 * @return the average color resulting from tracing all the rays
+	 */
+	public Color traceRays(List<Ray> rays) {
+		Color averageColor = Color.BLACK;
+		int raysCount = rays.size();
+		for (Ray ray : rays) {
+			averageColor = averageColor.add(traceRay(ray));
+		}
+		return averageColor.reduce(raysCount);
 	}
 
 	/**
@@ -68,9 +88,10 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the color at a given geometric point in the scene for a specified ray.
-	 * The method considers multiple levels of reflection and refraction to compute the final color.
-	 * Ambient light intensity from the scene is also added to the result.
+	 * Calculates the color at a given geometric point in the scene for a specified
+	 * ray. The method considers multiple levels of reflection and refraction to
+	 * compute the final color. Ambient light intensity from the scene is also added
+	 * to the result.
 	 *
 	 * @param gp  the geometric point for which the color is calculated
 	 * @param ray the ray that intersects the geometric point
@@ -185,11 +206,13 @@ public class SimpleRayTracer extends RayTracerBase {
 	/**
 	 * Calculates the transparency factor at a given geometric point in the scene.
 	 * 
-	 * @param gp         the geometric point at which transparency is being calculated
-	 * @param l          the direction vector from the point to the light source
-	 * @param n          the normal vector at the geometric point
+	 * @param gp          the geometric point at which transparency is being
+	 *                    calculated
+	 * @param l           the direction vector from the point to the light source
+	 * @param n           the normal vector at the geometric point
 	 * @param lightSource the light source affecting the transparency
-	 * @return the transparency factor at the given geometric point, represented as a {@link Double3} value
+	 * @return the transparency factor at the given geometric point, represented as
+	 *         a {@link Double3} value
 	 */
 	private Double3 transparency(GeoPoint gp, Vector l, Vector n, LightSource lightSource) {
 
@@ -224,7 +247,8 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @param gp the geometric point where the reflection occurs
 	 * @param v  the direction vector of the incoming ray
 	 * @param n  the normal vector at the point of intersection
-	 * @return the reflected ray, or null if the dot product of the direction vector and the normal is zero
+	 * @return the reflected ray, or null if the dot product of the direction vector
+	 *         and the normal is zero
 	 */
 	private Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n) {
 		double vn = alignZero(v.dotProduct(n));

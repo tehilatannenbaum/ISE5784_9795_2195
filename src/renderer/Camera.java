@@ -5,7 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 import primitives.Color;
-import java.util.MissingResourceException;
+
+import java.util.*;
 
 import static primitives.Util.*;
 
@@ -48,6 +49,16 @@ public class Camera implements Cloneable {
 	 * The distance from the camera to the view plane.
 	 */
 	private double distance = 0;
+
+	/**
+	 * The aperture size of the camera for depth of field effect. For stage 1
+	 */
+	private double apertureSize = 0;
+
+	/**
+	 * The focus distance for the depth of field effect. For stage 1
+	 */
+	private double focusDistance = 0;
 
 	/**
 	 * The ImageWriter for the camera.
@@ -98,6 +109,31 @@ public class Camera implements Cloneable {
 			pij = pij.add(vUp.scale(yi));
 
 		return new Ray(p0, pij.subtract(p0));
+	}
+
+	/**
+	 * Constructs rays through a given pixel in the view plane, considering depth of
+	 * field.
+	 *
+	 * @param nX number of pixels in the x direction
+	 * @param nY number of pixels in the y direction
+	 * @param j  the column index of the pixel
+	 * @param i  the row index of the pixel
+	 * @return a list of constructed rays through the pixel
+	 */
+	public List<Ray> constructRays(int nX, int nY, int j, int i) {
+		List<Ray> rays = new ArrayList<>();
+		Ray centralRay = constructRay(nX, nY, j, i);
+		Point focalPoint = centralRay.getPoint(focusDistance / distance);
+		Random rand = new Random();
+
+		for (int k = 0; k < 50; k++) {
+			double randomX = (rand.nextDouble() - 0.5) * apertureSize;
+			double randomY = (rand.nextDouble() - 0.5) * apertureSize;
+			Point aperturePoint = p0.add(vRight.scale(randomX)).add(vUp.scale(randomY));
+			rays.add(new Ray(aperturePoint, focalPoint.subtract(aperturePoint)));
+		}
+		return rays;
 	}
 
 	/**

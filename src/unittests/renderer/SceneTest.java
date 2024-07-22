@@ -1,6 +1,5 @@
 package unittests.renderer;
 
-
 import org.junit.jupiter.api.Test;
 
 import geometries.*;
@@ -11,16 +10,15 @@ import scene.Scene;
 
 /**
  * Tests for reflection and transparency functionality, test for partial shadows
- * (with transparency)
  */
 public class SceneTest {
 	/** Scene for the tests */
 	private final Scene scene = new Scene("Test scene");
 
 	/**
-	 * A builder for the Camera object, initialized with a direction and a simple ray tracer for the scene.
-	 * The direction of the camera is set to face along the negative z-axis with the up vector along the positive y-axis.
-	 * A SimpleRayTracer is used for tracing rays in the given scene.
+	 * A builder for the Camera object, initialized with a direction and a simple
+	 * ray tracer for the scene. The direction of the camera is set to face along
+	 * the negative z-axis with the up vector along the positive y-axis. A
 	 */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setRayTracer(new SimpleRayTracer(scene));
@@ -86,30 +84,63 @@ public class SceneTest {
 					.setMaterial(new Material().setKt(new Double3(0.5))));
 		}
 
-		// Add pebbles around the edge of the lake in clusters
-		for (int i = 0; i < 10; i++) {
-			double clusterX = -200 + Math.random() * 400;
-			double clusterZ = -200 + Math.random() * 400;
-			for (int j = 0; j < 10; j++) {
-				double x = clusterX + Math.random() * 10 - 5;
-				double z = clusterZ + Math.random() * 10 - 5;
-				scene.geometries.add(new Sphere(new Point(x, -110, z), 2d).setEmission(new Color(105, 105, 105))
+		/**
+		 * 
+		 * // Add one patch of grass along the edge of the lake double patchX = -100;
+		 * double patchZ = -100; for (int j = 0; j < 20; j++) { double x = patchX +
+		 * Math.random() * 10 - 5; double z = patchZ + Math.random() * 10 - 5; double
+		 * height = 5 + Math.random() * 5; scene.geometries.add(new Triangle(new
+		 * Point(x, -110, z), new Point(x + 1, -110, z + 1), new Point(x, -110 + height,
+		 * z + 1)).setEmission(new Color(34, 139, 34)) // Green color for grass
+		 * .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50))); }
+		 * 
+		 * // Add pebbles scene.geometries.add( new Sphere(new Point(-150, -110, -150),
+		 * 2d).setEmission(new Color(105, 105, 105)) .setMaterial(new
+		 * Material().setKd(0.5).setKs(0.5).setShininess(50)), new Sphere(new
+		 * Point(-100, -110, -150), 2d).setEmission(new Color(105, 105, 105))
+		 * .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50)), new
+		 * Sphere(new Point(-50, -110, -150), 2d).setEmission(new Color(105, 105, 105))
+		 * .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50)), new
+		 * Sphere(new Point(0, -110, -150), 2d).setEmission(new Color(105, 105, 105))
+		 * .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50)));
+		 **/
 
-						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50)));
-			}
-		}
-
-		// Add one patch of grass along the edge of the lake
-		double patchX = -100;
-		double patchZ = -100;
-		for (int j = 0; j < 20; j++) {
-			double x = patchX + Math.random() * 10 - 5;
-			double z = patchZ + Math.random() * 10 - 5;
-			double height = 5 + Math.random() * 5;
-			scene.geometries.add(new Triangle(new Point(x, -110, z), new Point(x + 1, -110, z + 1),
-					new Point(x, -110 + height, z + 1)).setEmission(new Color(34, 139, 34)) // Green color for grass
-					.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50)));
-		}
+		// Trees
+		scene.geometries.add(new Triangle(new Point(50, 27, -249), new Point(72.5, 62.5, -249), new Point(95, 35, -249))
+				.setEmission(new Color(0, 100, 0)).setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(50, 27, -249), new Point(72.5, 62.5, -249), new Point(78.86, 29.4, -205))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(50, 27, -249), new Point(95, 35, -249), new Point(78.86, 29.4, -205))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(45, 12, -249), new Point(72.5, 49, -249), new Point(100, 22, -249))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(45, 12, -249), new Point(72.5, 49, -249), new Point(73.46, 11.3, -205))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(45, 12, -249), new Point(100, 22, -249), new Point(73.46, 11.3, -205))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(40, -3, -249), new Point(72.5, 34, -249), new Point(105, 7, -249))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(40, -3, -249), new Point(72.5, 34, -249), new Point(88.06, 2.8, -211))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(40, -3, -249), new Point(105, 7, -249), new Point(88.06, 2.8, -211))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(35, -18, -249), new Point(72.5, 19, -249), new Point(111, -8, -249))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(35, -18, -249), new Point(72.5, 19, -249), new Point(67, -14, -211))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+				new Triangle(new Point(72.5, 19, -249), new Point(67, -14, -211), new Point(111, -8, -249))
+						.setEmission(new Color(0, 100, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)));
 
 		scene.setBackground(new Color(135, 206, 235));
 
