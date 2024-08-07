@@ -101,7 +101,8 @@ public class Camera implements Cloneable {
 		private List<Point> constructBeamPoints(Point pointOnSensor) {
 			List<Point> beamPoints = new ArrayList<>();
 			Random random = new Random();
-			double apertureRadius = camera.getAperture();
+			//double apertureRadius = camera.getAperture();
+		    double apertureRadius = camera.getAperture();
 			double sqrtGridSize = Math.sqrt(apertureRadius);
 
 			for (int i = 0; i < sqrtGridSize * sqrtGridSize; i++) {
@@ -114,6 +115,8 @@ public class Camera implements Cloneable {
 
 			return beamPoints;
 		}
+		
+		
 
 //	    private Point calculateFocalPoint(Ray ray) {
 //	        return ray.getPoint(camera.getFocusDistance());
@@ -137,6 +140,8 @@ public class Camera implements Cloneable {
 		}
 
 	}
+	
+	
 
 	public static class Builder {
 		private final Camera camera = new Camera();
@@ -236,7 +241,7 @@ public class Camera implements Cloneable {
 	public double getFocusDistance() {
 		return focusDistance;
 	}
-	
+
 	public Point getP0() {
 		return p0;
 	}
@@ -286,9 +291,5 @@ public class Camera implements Cloneable {
 		}
 		imageWriter.writePixel(pixelX, pixelY, color);
 	}
-	
-	
-
-	
 
 }
