@@ -22,7 +22,11 @@ public class SceneTests {
 	 */
 
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
-			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setRayTracer(new SimpleRayTracer(scene));
+			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+			.setNumOfRays(16)
+			.setAperture(0.2)
+			.setFocusDistance(50)
+			.setRayTracer(new SimpleRayTracer(scene));
 
 	/** Produce a picture of a snowman */
 	@Test

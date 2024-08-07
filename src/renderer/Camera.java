@@ -25,7 +25,6 @@ public class Camera implements Cloneable {
 	// New fields for Depth of Field and Anti-aliasing
 	private double focusDistance = 0;
 	private double aperture = 0;
-	private double sqrtGridSize = 1;
 	private int numOfRays;
 
 	private ImageWriter imageWriter;
@@ -101,8 +100,8 @@ public class Camera implements Cloneable {
 		private List<Point> constructBeamPoints(Point pointOnSensor) {
 			List<Point> beamPoints = new ArrayList<>();
 			Random random = new Random();
-			//double apertureRadius = camera.getAperture();
-		    double apertureRadius = camera.getAperture();
+			// double apertureRadius = camera.getAperture();
+			double apertureRadius = camera.getAperture();
 			double sqrtGridSize = Math.sqrt(apertureRadius);
 
 			for (int i = 0; i < sqrtGridSize * sqrtGridSize; i++) {
@@ -115,8 +114,6 @@ public class Camera implements Cloneable {
 
 			return beamPoints;
 		}
-		
-		
 
 //	    private Point calculateFocalPoint(Ray ray) {
 //	        return ray.getPoint(camera.getFocusDistance());
@@ -140,8 +137,6 @@ public class Camera implements Cloneable {
 		}
 
 	}
-	
-	
 
 	public static class Builder {
 		private final Camera camera = new Camera();

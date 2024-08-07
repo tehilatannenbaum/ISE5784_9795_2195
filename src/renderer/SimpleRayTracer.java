@@ -239,20 +239,22 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Constructs a reflected ray at a given geometric point.
-	 *
-	 * @param gp the geometric point where the reflection occurs
-	 * @param v  the direction vector of the incoming ray
-	 * @param n  the normal vector at the point of intersection
-	 * @return the reflected ray, or null if the dot product of the direction vector
-	 *         and the normal is zero
+	 * construct the reflection ray according to the physics law of reflection
+	 * 
+	 * @param geoPoint reference point of the new ray
+	 * @param ray      the ray to reflect
+	 * @param normal   normal to geometry at point
+	 * @return the reflected ray
 	 */
-	private Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n) {
-		double vn = alignZero(v.dotProduct(n));
-		if (vn == 0)
-			return null;
-		Vector r = v.subtract(n.scale(2 * vn));
-		return new Ray(gp.point, r, n);
+	private Ray constructReflectedRay(GeoPoint geoPoint, Ray ray, Vector normal) {
+		Vector v = ray.getDirection();
+		double nv = alignZero(v.dotProduct(normal));
+
+		// r = v - 2 * (v * n) * n
+		Vector r = v.subtract(normal.scale(2d * nv)).normalize();
+
+		// use the constructor with the normal for moving the head
+		return new Ray(geoPoint.point, r, normal);
 	}
 
 	/**
@@ -268,40 +270,37 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the global effects (reflection and refraction) for a given
-	 * intersection point.
+	 * calculate the effects of the lighting on the intensity of the point
 	 * 
-	 * @param gp    The intersection point.
-	 * @param ray   The ray from the camera to the intersection.
-	 * @param level The current recursion level.
-	 * @param k     The cumulative attenuation factor.
-	 * @return The color contribution from global effects.
+	 * @param geoPoint a GeoPoint object to calculate the effects on
+	 * @param ray      ray of the camera pointing to the GeoPoint's geometry
+	 * @param level    depth of the recursion for the global effects
+	 * @param k        volume of the color
+	 * @return the calculated color on the point in the geoPoint
 	 */
-	private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
-		Color color = Color.BLACK;
-		Vector n = gp.geometry.getNormal(gp.point);
-		Material material = gp.geometry.getMaterial();
-		Vector v = ray.getDirection();
+	private Color calcGlobalEffects(GeoPoint geoPoint, Ray ray, int level, Double3 k) {
+		Material material = geoPoint.geometry.getMaterial();
+		Vector normal = geoPoint.geometry.getNormal(geoPoint.point);
+		return calcGlobalEffect(constructRefractedRay(geoPoint, ray, normal), material.kT, level, k)
+				.add(calcGlobalEffect(constructReflectedRay(geoPoint, ray, normal), material.kR, level, k));
+	}
 
-		Double3 kkr = material.kR.product(k);
-		if (!kkr.lowerThan(MIN_CALC_COLOR_K)) {
-			Ray reflectedRay = constructReflectedRay(gp, v, n);
-			GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
-			if (reflectedPoint != null) {
-				color = color.add(calcColor(reflectedPoint, reflectedRay, level - 1, kkr).scale(material.kR));
-			}
-		}
-
-		Double3 kkt = material.kT.product(k);
-		if (!kkt.lowerThan(MIN_CALC_COLOR_K)) {
-			Ray refractedRay = constructRefractedRay(gp, ray, n);
-			GeoPoint refractedPoint = findClosestIntersection(refractedRay);
-			if (refractedPoint != null) {
-				color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(material.kT));
-			}
-		}
-
-		return color;
+	/**
+	 * Computes the global effect color for the given ray, considering reflections,
+	 * refractions, and other effects.
+	 * 
+	 * @param ray   The ray to evaluate.
+	 * @param kx    The global effect coefficient.
+	 * @param level Recursion level for effects.
+	 * @param k     Scaling factor for the global effect.
+	 * @return The resulting color after applying global effects.
+	 */
+	private Color calcGlobalEffect(Ray ray, Double3 kx, int level, Double3 k) {
+		Double3 kkx = kx.product(k);
+		if (kkx.lowerThan(MIN_CALC_COLOR_K))
+			return Color.BLACK;
+		GeoPoint geoPoint = findClosestIntersection(ray);
+		return (geoPoint == null ? scene.background : calcColor(geoPoint, ray, level - 1, kkx)).scale(kx);
 	}
 
 	/**
