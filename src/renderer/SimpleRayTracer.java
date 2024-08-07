@@ -66,11 +66,10 @@ public class SimpleRayTracer extends RayTracerBase {
 	 */
 	public Color traceRays(List<Ray> rays) {
 		Color averageColor = Color.BLACK;
-		int raysCount = rays.size();
 		for (Ray ray : rays) {
 			averageColor = averageColor.add(traceRay(ray));
 		}
-		return averageColor.reduce(raysCount);
+		return averageColor.reduce(rays.size());
 	}
 
 	/**
@@ -187,8 +186,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		Ray lightRay = new Ray(point, lightDirection, n);
 
 		var intersections = scene.geometries.findGeoIntersections(lightRay);
-
-		if (intersections == null || intersections.isEmpty())
+		if (intersections == null)
 			return true;
 
 		var lightDistance = lightSource.getDistance(point);
@@ -224,8 +222,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		var intersections = scene.geometries.findGeoIntersections(lightRay);
 
 		Double3 ktr = Double3.ONE;
-
-		if (intersections == null || intersections.isEmpty())
+		if (intersections == null)
 			return ktr;
 
 		var lightDistance = lightSource.getDistance(point);

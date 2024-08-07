@@ -1,5 +1,7 @@
 package renderer;
 
+import java.util.List;
+
 import primitives.Color;
 import primitives.Ray;
 import scene.Scene;
@@ -31,4 +33,6 @@ public abstract class RayTracerBase {
 	 * @return The color of the closest object intersected by the ray.
 	 */
 	public abstract Color traceRay(Ray ray);
+
+	public abstract Color traceRays(List<Ray> rays);
 }

@@ -69,15 +69,11 @@ public abstract class Intersectable {
 
 		@Override
 		public boolean equals(Object obj) {
-			// Check if it's the same object
 			if (this == obj)
 				return true;
-			// Check if the object is null or not the same class
-			if (obj == null || getClass() != obj.getClass())
-				return false;
-			GeoPoint other = (GeoPoint) obj;
-			// Check if the geometry and point are the same
-			return Objects.equals(this.geometry, other.geometry) && this.point.equals(other.point);
+
+			return (obj instanceof GeoPoint && Objects.equals(this.geometry, ((GeoPoint) obj).geometry)
+					&& this.point.equals(((GeoPoint) obj).point));
 
 		}
 

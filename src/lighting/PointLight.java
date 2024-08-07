@@ -16,11 +16,6 @@ public class PointLight extends Light implements LightSource {
 	private final Point position;
 
 	/**
-	 * The narrow beam factor of the point light source.
-	 */
-	private double narrowBeam = 1.0;
-
-	/**
 	 * Constant attenuation
 	 */
 	private double kc = 1.0;
@@ -101,17 +96,6 @@ public class PointLight extends Light implements LightSource {
 	@Override
 	public Vector getL(Point p) {
 		return p.subtract(position).normalize();
-	}
-
-	/**
-	 * Sets the narrow beam factor for the light source.
-	 *
-	 * @param narrowBeam The narrow beam factor.
-	 * @return The updated PointLight object.
-	 */
-	public PointLight setNarrowBeam(double narrowBeam) {
-		this.narrowBeam = narrowBeam;
-		return this;
 	}
 
 	@Override

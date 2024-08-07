@@ -4,6 +4,8 @@ package lighting;
 import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
+import static primitives.Util.*;
+import static java.lang.Math.*;
 
 /**
  * The SpotLight class represents a light source that has a specific position
@@ -16,13 +18,12 @@ public class SpotLight extends PointLight {
 	 * The direction vector of the spot light. This vector indicates the direction
 	 * in which the light is directed.
 	 */
-	private Vector dir;
+	private final Vector dir;
 
 	/**
-	 * The narrowness of the beam of the spot light. A higher value results in a
-	 * narrower beam. Default value is 1.
+	 * The narrow beam factor of the point light source.
 	 */
-	private double NarrowBeam = 1;
+	private double narrowBeam = 1;
 
 	/**
 	 * Constructs a SpotLight with the specified color, position, and direction.
@@ -81,17 +82,18 @@ public class SpotLight extends PointLight {
 	 * Sets the narrowness of the beam for the spot light. A higher value results in
 	 * a narrower beam.
 	 *
-	 * @param NarrowBeam the new narrowness value for the beam
+	 * @param narrowBeam the new narrowness value for the beam
 	 * @return the current SpotLight instance with the updated narrow beam value
 	 */
-	public SpotLight setNarrowBeam(double NarrowBeam) {
-		this.NarrowBeam = NarrowBeam;
+	public SpotLight setNarrowBeam(double narrowBeam) {
+		this.narrowBeam = narrowBeam;
 		return this;
 	}
 
 	@Override
 	public Color getIntensity(Point p) {
-		return NarrowBeam != 1 ? super.getIntensity(p).scale(Math.pow(Math.max(0, dir.dotProduct(getL(p))), NarrowBeam))
-				: super.getIntensity(p).scale(Math.max(0, dir.dotProduct(getL(p))));
+		double cos = dir.dotProduct(getL(p));
+		return alignZero(cos) <= 0 ? Color.BLACK
+				: super.getIntensity(p).scale(narrowBeam == 1 ? cos : pow(cos, narrowBeam));
 	}
 }
