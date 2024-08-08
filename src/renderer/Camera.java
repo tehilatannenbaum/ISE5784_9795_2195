@@ -13,35 +13,217 @@ import static primitives.Util.*;
  * a view plane for rendering scenes.
  */
 public class Camera implements Cloneable {
+
 	// Existing fields
+	/**
+	 * Camera's position in 3D space.
+	 */
 	private Point p0;
+
+	/**
+	 * Camera's view direction.
+	 */
 	private Vector vTo;
+
+	/**
+	 * Camera's up direction.
+	 */
 	private Vector vUp;
+
+	/**
+	 * Camera's right direction.
+	 */
 	private Vector vRight;
+
+	/**
+	 * Height of the view plane. Default is 0.
+	 */
 	private double height = 0;
+
+	/**
+	 * Width of the view plane. Default is 0.
+	 */
 	private double width = 0;
+
+	/**
+	 * Distance to the view plane. Default is 0.
+	 */
 	private double distance = 0;
 
 	// New fields for Depth of Field and Anti-aliasing
+	/**
+	 * Focus distance for depth of field. Default is 0.
+	 */
 	private double focusDistance = 0;
+
+	/**
+	 * Aperture size for depth of field. Default is 0.
+	 */
 	private double aperture = 0;
+
+	/**
+	 * Number of rays per pixel for anti-aliasing. Default is 0.
+	 */
 	private int numOfRays;
 
+	/**
+	 * Image writer for saving the rendered image.
+	 */
 	private ImageWriter imageWriter;
+
+	/**
+	 * Ray tracer for rendering the scene.
+	 */
 	private RayTracerBase rayTracer;
 
+	/**
+	 * Random generator for operations requiring randomness.
+	 */
+	private static final Random random = new Random();
+
+	/**
+	 * Private constructor to prevent direct instantiation of the {@link Camera} class.
+	 * 
+	 * <p>This constructor is used only within the {@link Builder} class to create an instance of the {@link Camera} class.
+	 * It ensures that the camera is properly configured through the builder pattern before being used.</p>
+	 */
 	private Camera() {
 	}
 
+	/**
+	 * Creates and returns a new builder instance for Camera.
+	 * 
+	 * @return a new Camera.Builder instance
+	 */
 	public static Builder getBuilder() {
 		return new Builder();
 	}
 
+	// Getters
+
+	/**
+	 * Returns the aperture size of the camera.
+	 * 
+	 * @return aperture size
+	 */
+	public double getAperture() {
+		return aperture;
+	}
+
+	/**
+	 * Returns the focus distance of the camera.
+	 * 
+	 * @return focus distance
+	 */
+	public double getFocusDistance() {
+		return focusDistance;
+	}
+
+	/**
+	 * Returns the position of the camera (p0).
+	 * 
+	 * @return camera position
+	 */
+	public Point getP0() {
+		return p0;
+	}
+
+	/**
+	 * Returns the number of rays used for anti-aliasing and depth of field.
+	 * 
+	 * @return number of rays
+	 */
+	public int getNumOfRays() {
+		return numOfRays;
+	}
+
+	// Setters
+
+	/**
+	 * Sets the aperture size of the camera.
+	 * 
+	 * @param aperture aperture size
+	 * @return this Camera instance for chaining
+	 */
+	public Camera setAperture(double aperture) {
+		if (aperture < 0)
+			throw new IllegalArgumentException("Focus aperture cannot be negative");
+		this.aperture = aperture;
+		return this;
+	}
+
+	/**
+	 * Sets the focus distance of the camera.
+	 * 
+	 * @param focusDistance focus distance
+	 * @return this Camera instance for chaining
+	 */
+	public Camera setFocusDistance(double focusDistance) {
+		if (focusDistance < 0)
+			throw new IllegalArgumentException("Focus distance cannot be negative");
+		this.focusDistance = focusDistance;
+		return this;
+	}
+
+	/**
+	 * Sets the number of rays used for anti-aliasing and depth of field.
+	 * 
+	 * @param numOfRays number of rays
+	 * @return this Camera instance for chaining
+	 */
+	public Camera setNumOfRays(int numOfRays) {
+		this.numOfRays = numOfRays;
+		return this;
+	}
+
+	/**
+	 * Sets the image writer for the camera.
+	 * 
+	 * @param imageWriter the image writer
+	 * @return this Camera instance for chaining
+	 */
+	public Camera setImageWriter(ImageWriter imageWriter) {
+		this.imageWriter = imageWriter;
+		return this;
+	}
+
+	/**
+	 * Sets the ray tracer for the camera.
+	 * 
+	 * @param rayTracer the ray tracer
+	 * @return this Camera instance for chaining
+	 */
+	public Camera setRayTracer(RayTracerBase rayTracer) {
+		this.rayTracer = rayTracer;
+		return this;
+	}
+
+	// Other methods
+
+	/**
+	 * Constructs a ray through the specified pixel (j, i) in the view plane.
+	 * 
+	 * @param nX the number of pixels in the x direction
+	 * @param nY the number of pixels in the y direction
+	 * @param j  the x-coordinate of the pixel
+	 * @param i  the y-coordinate of the pixel
+	 * @return a ray from the camera through the specified pixel
+	 */
 	public Ray constructRay(int nX, int nY, int j, int i) {
 		Point pij = getPij(nX, nY, j, i);
 		return new Ray(getP0(), pij.subtract(getP0()));
 	}
 
+	/**
+	 * Returns the point pij in the view plane corresponding to the specified pixel
+	 * (j, i).
+	 * 
+	 * @param nX the number of pixels in the x direction
+	 * @param nY the number of pixels in the y direction
+	 * @param j  the x-coordinate of the pixel
+	 * @param i  the y-coordinate of the pixel
+	 * @return the point pij in the view plane
+	 */
 	public Point getPij(int nX, int nY, int j, int i) {
 		double rY = height / nY;
 		double rX = width / nX;
@@ -58,89 +240,129 @@ public class Camera implements Cloneable {
 		return pij;
 	}
 
-	public static class DepthOfField {
-
-		private Camera camera;
-//	    private double apertureRadius;
-//	    private double focusDistance;
-//	    private double sqrtGridSize;
-
-		/**
-		 * Constructs a DepthOfField camera with specified parameters.
-		 * 
-		 * @param position       The position of the camera in 3D space.
-		 * @param direction      The forward direction vector of the camera.
-		 * @param up             The upward direction vector of the camera.
-		 * @param right          The rightward direction vector of the camera.
-		 * @param apertureRadius The radius of the aperture.
-		 * @param focusDistance  The distance from the camera to the focus plane.
-		 * @param width          The width of the view plane.
-		 * @param height         The height of the view plane.
-		 * @param distance       The distance from the camera to the view plane.
-		 * @param sqrtGridSize   The square root of the grid size for anti-aliasing.
-		 */
-		public DepthOfField(Camera camera) {
-			this.camera = camera;
-//	        Camera.Builder builder = Camera.getBuilder();
-//	        builder.setLocation(position)
-//	               .setDirection(direction, up)
-//	               .setVpSize(width, height)
-//	               .setVpDistance(distance)
-
-			// .setFocusDistance(focusDistance)
-//	               .setSqrtGridSize(sqrtGridSize);
-			//
-//	        // Build the camera and initialize DepthOfField parameters
-//	        this.camera = builder.build();
-//	        this.apertureRadius = apertureRadius;
-//	        this.focusDistance = focusDistance;
-//	        this.sqrtGridSize = sqrtGridSize;
-		}
-
-		private List<Point> constructBeamPoints(Point pointOnSensor) {
-			List<Point> beamPoints = new ArrayList<>();
-			Random random = new Random();
-			// double apertureRadius = camera.getAperture();
-			double apertureRadius = camera.getAperture();
-			double sqrtGridSize = Math.sqrt(apertureRadius);
-
-			for (int i = 0; i < sqrtGridSize * sqrtGridSize; i++) {
-				double angle = 2 * Math.PI * random.nextDouble();
-				double radius = apertureRadius * Math.sqrt(random.nextDouble());
-				double x = radius * Math.cos(angle);
-				double y = radius * Math.sin(angle);
-				beamPoints.add(pointOnSensor.add(new Vector(x, y, 0)));
+	/**
+	 * Prints a grid on the image with the specified interval and color.
+	 * 
+	 * @param interval the interval between grid lines
+	 * @param color    the color of the grid lines
+	 * @return this Camera instance for chaining
+	 */
+	public Camera printGrid(int interval, Color color) {
+		for (int i = 0; i < imageWriter.getNy(); i++) {
+			for (int j = 0; j < imageWriter.getNx(); j++) {
+				if (i % interval == 0 || j % interval == 0) {
+					imageWriter.writePixel(j, i, color);
+				}
 			}
-
-			return beamPoints;
 		}
+		return this;
+	}
 
-//	    private Point calculateFocalPoint(Ray ray) {
-//	        return ray.getPoint(camera.getFocusDistance());
-//	    }
+	/**
+	 * Writes the rendered image to the output file.
+	 */
+	public void writeToImage() {
+		imageWriter.writeToImage();
+	}
 
-		public List<Ray> generateRays(Point pIJ, int numRays) {
-			List<Ray> rays = new ArrayList<>();
-			List<Point> beamPoints = constructBeamPoints(pIJ);
+	/**
+	 * Renders the image by casting rays through each pixel in the view plane.
+	 * 
+	 * @return this Camera instance for chaining
+	 */
+	public Camera renderImage() {
+		int resolutionX = imageWriter.getNx(); // Horizontal resolution
+		int resolutionY = imageWriter.getNy(); // Vertical resolution
 
-			Vector pIJdirection = camera.getP0().subtract(pIJ).normalize();
-
-			Point focalPoint = camera.getP0().add(pIJdirection.scale(camera.getFocusDistance()));
-
-			for (Point aperturePoint : beamPoints) {
-				Vector direction = focalPoint.subtract(aperturePoint).normalize();
-				Ray ray = new Ray(aperturePoint, direction);
-				rays.add(ray);
+		for (int y = 0; y < resolutionY; y++) {
+			for (int x = 0; x < resolutionX; x++) {
+				castRays(resolutionX, resolutionY, x, y);
 			}
-
-			return rays;
 		}
+		return this;
+	}
+
+	/**
+	 * Casts rays through the specified pixel (pixelX, pixelY) to determine its
+	 * color.
+	 * 
+	 * @param nX     the number of pixels in the x direction
+	 * @param nY     the number of pixels in the y direction
+	 * @param pixelX the x-coordinate of the pixel
+	 * @param pixelY the y-coordinate of the pixel
+	 */
+	private void castRays(int nX, int nY, int pixelX, int pixelY) {
+		Color color = Color.BLACK;
+		Ray ray = constructRay(nX, nY, pixelX, pixelY);
+
+		if (numOfRays > 1 && !isZero(aperture) && !isZero(focusDistance)) {
+			double cosA = vTo.dotProduct(ray.getDirection());
+			double dij = focusDistance / cosA;
+			Point focalPoint = p0.add(ray.getDirection().scale(dij));
+			List<Point> apperturePoints = constructBeamPoints(aperture, numOfRays);
+			for (var sourcePoint : apperturePoints) {
+				Ray secondaryRay = new Ray(sourcePoint, focalPoint.subtract(sourcePoint));
+				color = color.add(rayTracer.traceRay(secondaryRay));
+			}
+			color = color.reduce(apperturePoints.size());
+
+		} else
+			color = rayTracer.traceRay(ray);
+
+		imageWriter.writePixel(pixelX, pixelY, color);
 
 	}
 
+	/**
+	 * Constructs a list of random points within the aperture for depth of field
+	 * effects.
+	 * 
+	 * @param radius   the radius of the aperture
+	 * @param gridSize the number of points to generate
+	 * @return a list of random points within the aperture
+	 */
+	private List<Point> constructBeamPoints(double radius, int gridSize) {
+		List<Point> beamPoints = new LinkedList<>();
+		double windowSize = radius * 2;
+		double gridStep = windowSize / gridSize;
+		Point p = p0;
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				p = p0;
+				p = p.add(vRight.scale(-radius + i * gridStep + random.nextDouble() * gridStep));
+				p = p.add(vUp.scale(-radius + j * gridStep + random.nextDouble() * gridStep));
+				if (p0.distance(p) <= radius)
+					beamPoints.add(p);
+			}
+		}
+
+		return beamPoints;
+	}
+
+	/**
+	 * A builder class for constructing {@link Camera} instances.
+	 * <p>
+	 * The Builder pattern is used to create immutable Camera objects with complex
+	 * configurations.
+	 * </p>
+	 */
 	public static class Builder {
+
+		/**
+		 * The {@link Camera} instance used for rendering the scene.
+		 * 
+		 * <p>This field holds the configuration of the camera that will be used to generate rays for rendering the scene.
+		 * It is initialized in the builder pattern and configured with various parameters such as location, direction,
+		 * view plane size, distance, focus distance, aperture, and image writer.</p>
+		 */
 		private final Camera camera = new Camera();
 
+		/**
+		 * Sets the location of the camera.
+		 * 
+		 * @param location the location of the camera
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setLocation(Point location) {
 			if (location == null)
 				throw new IllegalArgumentException("location cannot be null");
@@ -148,6 +370,13 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the direction vectors of the camera.
+		 * 
+		 * @param vTo the direction vector towards the view plane
+		 * @param vUp the direction vector upwards
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setDirection(Vector vTo, Vector vUp) {
 			if (vTo == null || vUp == null)
 				throw new IllegalArgumentException("Direction vectors cannot be null");
@@ -159,6 +388,13 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the size of the view plane.
+		 * 
+		 * @param width  the width of the view plane
+		 * @param height the height of the view plane
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setVpSize(double width, double height) {
 			if (alignZero(width) <= 0 || alignZero(height) <= 0)
 				throw new IllegalArgumentException("View plane dimensions must be positive");
@@ -167,6 +403,12 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the distance of the view plane from the camera.
+		 * 
+		 * @param distance the distance to the view plane
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setVpDistance(double distance) {
 			if (distance <= 0)
 				throw new IllegalArgumentException("View plane distance must be positive");
@@ -174,7 +416,12 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
-		// New Builder methods for Depth of Field
+		/**
+		 * Sets the focus distance of the camera.
+		 * 
+		 * @param focusDistance the focus distance
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setFocusDistance(double focusDistance) {
 			if (focusDistance < 0)
 				throw new IllegalArgumentException("Focus distance cannot be negative");
@@ -182,6 +429,12 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the aperture size of the camera.
+		 * 
+		 * @param aperture the aperture size
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setAperture(double aperture) {
 			if (aperture < 0)
 				throw new IllegalArgumentException("Focus aperture cannot be negative");
@@ -189,28 +442,45 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the number of rays used for anti-aliasing and depth of field.
+		 * 
+		 * @param numOfRays the number of rays
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setNumOfRays(int numOfRays) {
 			this.camera.numOfRays = numOfRays;
 			return this;
 		}
 
-//		public Builder setSqrtGridSize(double sqrtGridSize) {
-//			if (sqrtGridSize < 1)
-//				throw new IllegalArgumentException("sqrtGridSize must be greater than 0");
-//			camera.sqrtGridSize = sqrtGridSize;
-//			return this;
-//		}
-
+		/**
+		 * Sets the image writer for the camera.
+		 * 
+		 * @param imageWriter the image writer
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setImageWriter(ImageWriter imageWriter) {
 			this.camera.imageWriter = imageWriter;
 			return this;
 		}
 
+		/**
+		 * Sets the ray tracer for the camera.
+		 * 
+		 * @param rayTracer the ray tracer
+		 * @return this Builder instance for chaining
+		 */
 		public Builder setRayTracer(RayTracerBase rayTracer) {
 			this.camera.rayTracer = rayTracer;
 			return this;
 		}
 
+		/**
+		 * Builds and returns the Camera instance.
+		 * 
+		 * @return a Camera instance
+		 * @throws MissingResourceException if any required fields are missing
+		 */
 		public Camera build() {
 			if (camera.getP0() == null || camera.vTo == null || camera.vUp == null || camera.vRight == null
 					|| !isZero(camera.vTo.dotProduct(camera.vUp)) || camera.width <= 0 || camera.height <= 0
@@ -226,65 +496,5 @@ public class Camera implements Cloneable {
 				throw new AssertionError();
 			}
 		}
-
 	}
-
-	public double getAperture() {
-		return aperture;
-	}
-
-	public double getFocusDistance() {
-		return focusDistance;
-	}
-
-	public Point getP0() {
-		return p0;
-	}
-
-	public int getNumOfRays() {
-		return numOfRays;
-	}
-
-	public Camera printGrid(int interval, Color color) {
-		for (int i = 0; i < imageWriter.getNy(); i++) {
-			for (int j = 0; j < imageWriter.getNx(); j++) {
-				if (i % interval == 0 || j % interval == 0) {
-					imageWriter.writePixel(j, i, color);
-				}
-			}
-		}
-		return this;
-	}
-
-	public void writeToImage() {
-		imageWriter.writeToImage();
-	}
-
-	public Camera renderImage() {
-		int resolutionX = imageWriter.getNx(); // Horizontal resolution
-		int resolutionY = imageWriter.getNy(); // Vertical resolution
-
-		for (int y = 0; y < resolutionY; y++) {
-			for (int x = 0; x < resolutionX; x++) {
-				castRay(resolutionX, resolutionY, x, y);
-			}
-		}
-		return this;
-	}
-
-	private void castRay(int nX, int nY, int pixelX, int pixelY) {
-		Color color = Color.BLACK;
-
-		if (getAperture() > 0 && getFocusDistance() > 0) {
-			DepthOfField dof = new DepthOfField(this);
-			Point pIJ = getPij(nX, nY, pixelX, pixelY);
-			List<Ray> rays = dof.generateRays(pIJ, getNumOfRays());
-			color = rayTracer.traceRays(rays);
-		} else {
-			Ray ray = constructRay(nX, nY, pixelX, pixelY);
-			color = rayTracer.traceRay(ray);
-		}
-		imageWriter.writePixel(pixelX, pixelY, color);
-	}
-
 }

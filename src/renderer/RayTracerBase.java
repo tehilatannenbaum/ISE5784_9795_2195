@@ -33,6 +33,12 @@ public abstract class RayTracerBase {
 	 * @return The color of the closest object intersected by the ray.
 	 */
 	public abstract Color traceRay(Ray ray);
-
+	
+	/**
+	 * Traces a list of rays and returns the resulting color.
+	 * 
+	 * @param rays the rays to be traced
+	 * @return the resulting color
+	 */
 	public abstract Color traceRays(List<Ray> rays);
 }
