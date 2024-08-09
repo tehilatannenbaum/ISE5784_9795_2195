@@ -22,8 +22,11 @@ public class SceneTests {
 	 */
 
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
-			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setNumOfRays(16).setAperture(0.2)
-			.setFocusDistance(100).setRayTracer(new SimpleRayTracer(scene));
+			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+			.setNumOfRays(16)
+			.setAperture(0.2)
+			.setFocusDistance(100)
+			.setRayTracer(new SimpleRayTracer(scene));
 
 	/** Produce a picture of a snowman */
 	@Test
@@ -87,7 +90,8 @@ public class SceneTests {
 
 		// Sunlight light source
 		scene.lights.add(new DirectionalLight(new Color(255, 200, 0), new Vector(0.5, -0.5, -0.5)));
-
+		
+		
 		// Trees
 		// First tree
 		scene.geometries.add(new Triangle(new Point(50, 27, -249), new Point(72.5, 62.5, -249), new Point(95, 35, -249))

@@ -82,10 +82,12 @@ public class Camera implements Cloneable {
 	private static final Random random = new Random();
 
 	/**
-	 * Private constructor to prevent direct instantiation of the {@link Camera} class.
+	 * Private constructor to prevent direct instantiation of the {@link Camera}
+	 * class.
 	 * 
-	 * <p>This constructor is used only within the {@link Builder} class to create an instance of the {@link Camera} class.
-	 * It ensures that the camera is properly configured through the builder pattern before being used.</p>
+	 * This constructor is used only within the {@link Builder} class to create an
+	 * instance of the {@link Camera} class. It ensures that the camera is properly
+	 * configured through the builder pattern before being used.
 	 */
 	private Camera() {
 	}
@@ -295,11 +297,15 @@ public class Camera implements Cloneable {
 		Color color = Color.BLACK;
 		Ray ray = constructRay(nX, nY, pixelX, pixelY);
 
+		// check for depth of field and anti aliasing
 		if (numOfRays > 1 && !isZero(aperture) && !isZero(focusDistance)) {
 			double cosA = vTo.dotProduct(ray.getDirection());
 			double dij = focusDistance / cosA;
+			
 			Point focalPoint = p0.add(ray.getDirection().scale(dij));
 			List<Point> apperturePoints = constructBeamPoints(aperture, numOfRays);
+			
+			// second ray for each point in apperture
 			for (var sourcePoint : apperturePoints) {
 				Ray secondaryRay = new Ray(sourcePoint, focalPoint.subtract(sourcePoint));
 				color = color.add(rayTracer.traceRay(secondaryRay));
@@ -307,6 +313,7 @@ public class Camera implements Cloneable {
 			color = color.reduce(apperturePoints.size());
 
 		} else
+			// regullar ray (no depth quality)
 			color = rayTracer.traceRay(ray);
 
 		imageWriter.writePixel(pixelX, pixelY, color);
@@ -323,14 +330,22 @@ public class Camera implements Cloneable {
 	 */
 	private List<Point> constructBeamPoints(double radius, int gridSize) {
 		List<Point> beamPoints = new LinkedList<>();
+		
+		// size for aperture
 		double windowSize = radius * 2;
 		double gridStep = windowSize / gridSize;
+		
+		
 		Point p = p0;
+		
+		// creates a grid of points in aperture
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				p = p0;
 				p = p.add(vRight.scale(-radius + i * gridStep + random.nextDouble() * gridStep));
 				p = p.add(vUp.scale(-radius + j * gridStep + random.nextDouble() * gridStep));
+				
+				// only if in the radius add to beamPoint
 				if (p0.distance(p) <= radius)
 					beamPoints.add(p);
 			}
@@ -351,9 +366,12 @@ public class Camera implements Cloneable {
 		/**
 		 * The {@link Camera} instance used for rendering the scene.
 		 * 
-		 * <p>This field holds the configuration of the camera that will be used to generate rays for rendering the scene.
-		 * It is initialized in the builder pattern and configured with various parameters such as location, direction,
-		 * view plane size, distance, focus distance, aperture, and image writer.</p>
+		 * <p>
+		 * This field holds the configuration of the camera that will be used to
+		 * generate rays for rendering the scene. It is initialized in the builder
+		 * pattern and configured with various parameters such as location, direction,
+		 * view plane size, distance, focus distance, aperture, and image writer.
+		 * </p>
 		 */
 		private final Camera camera = new Camera();
 
