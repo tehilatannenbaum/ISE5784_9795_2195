@@ -23,17 +23,16 @@ public class SceneTests {
 
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-			.setNumOfRays(16)
+			.setNumOfRays(6)
 			.setAperture(0.2)
-			.setFocusDistance(100)
+			.setFocusDistance(900)
 			.setRayTracer(new SimpleRayTracer(scene));
 
 	/** Produce a picture of a snowman */
 	@Test
 	public void snowman() {
 		// Snowman Body
-		scene.geometries.add(new Sphere(new Point(0, -60, -100), 50d).setEmission(new Color(169, 169, 169)) // Bottom
-																											// sphere
+		scene.geometries.add(new Sphere(new Point(0, -60, -100), 50d).setEmission(new Color(169, 169, 169)) // Bottom sphere
 				.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)),
 				new Sphere(new Point(0, 10, -100), 35d).setEmission(new Color(169, 169, 169)) // Middle sphere
 						.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)),
