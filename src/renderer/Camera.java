@@ -13,12 +13,16 @@ import static primitives.Util.*;
  * a view plane for rendering scenes.
  */
 public class Camera implements Cloneable {
-
+	
+	
+	
+	
 	// Existing fields
-	/**
-	 * Camera's position in 3D space.
-	 */
+	/** Camera's position in 3D space. */
 	private Point p0;
+
+	/** used for initializing the blackboard */
+	Point pixelCenter;
 
 	/**
 	 * Camera's view direction.
@@ -75,11 +79,39 @@ public class Camera implements Cloneable {
 	 * Ray tracer for rendering the scene.
 	 */
 	private RayTracerBase rayTracer;
+	
+	// super sampling and multi thread
+	
+	/**
+	 *  List of points representing the aperture positions for depth of field effects. 
+	 */
+	static List<Point> apperturePoints;
+	
+	/** 
+	 * the number of threads, or other code operations 
+	 */
+	private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+
+	/** 
+	 * progress percentage 
+	 */
+	private double printInterval = 0; // printing progress percentage interval
+
+	/** 
+	 * Manages the pixels and their rendering for the image. 
+	*/
+	private PixelManager pixelManager;
+
+	/** 
+	 * A static instance of the Blackboard used for managing shared resources. 
+	 */
+	private static Blackboard blackboard;
 
 	/**
-	 * Random generator for operations requiring randomness.
+	 * max level of recursion for adaptive grid acceleration, 0 means no adaptive
+	 * grid is used
 	 */
-	private static final Random random = new Random();
+	private static int adaptiveGridDepth = 0;
 
 	/**
 	 * Private constructor to prevent direct instantiation of the {@link Camera}
@@ -213,6 +245,7 @@ public class Camera implements Cloneable {
 	 */
 	public Ray constructRay(int nX, int nY, int j, int i) {
 		Point pij = getPij(nX, nY, j, i);
+		this.pixelCenter = pij;
 		return new Ray(getP0(), pij.subtract(getP0()));
 	}
 
@@ -261,26 +294,61 @@ public class Camera implements Cloneable {
 	}
 
 	/**
+	 * a method that checks if 4 colors are identical
+	 * 
+	 * @param c1
+	 * @param c2
+	 * @param c3
+	 * @param c4
+	 * @return true or false
+	 */
+	private static boolean compareColors(Color c1, Color c2, Color c3, Color c4) {
+		return c1.equals(c2) && c2.equals(c3) && c3.equals(c4);
+	}
+
+	/**
 	 * Writes the rendered image to the output file.
 	 */
 	public void writeToImage() {
 		imageWriter.writeToImage();
 	}
 
-	/**
-	 * Renders the image by casting rays through each pixel in the view plane.
-	 * 
-	 * @return this Camera instance for chaining
-	 */
 	public Camera renderImage() {
-		int resolutionX = imageWriter.getNx(); // Horizontal resolution
-		int resolutionY = imageWriter.getNy(); // Vertical resolution
+		// IMAGE RENDERING
+		// Pass a ray from the camera through each pixel in the view plane and set the color
+		int nY = this.imageWriter.getNy();
+		int nX = this.imageWriter.getNx();
+		pixelManager = new PixelManager(nY, nX, printInterval);
 
-		for (int y = 0; y < resolutionY; y++) {
-			for (int x = 0; x < resolutionX; x++) {
-				castRays(resolutionX, resolutionY, x, y);
+		if (threadsCount == 0) {
+			for (int i = 0; i < nY; i++) {
+				for (int j = 0; j < nX; j++) {
+					castRays(nX, nY, i, j);
+				}
+			}
+		} else { 
+			var threads = new LinkedList<Thread>(); 
+			while (threadsCount-- > 0) 
+				threads.add(new Thread(() -> {
+					// current pixel(row,col)
+					PixelManager.Pixel pixel; 
+					// allocate pixel(row,col) in loop until there are no more pixels
+					while ((pixel = pixelManager.nextPixel()) != null)
+						// cast ray through pixel (and color it – inside castRays)
+						castRays(nX, nY, pixel.col(), pixel.row());
+				}));
+			
+			// start all the threads
+			for (var thread : threads)
+				thread.start();
+			// wait until all the threads have finished
+			try {
+				for (var thread : threads)
+					thread.join();
+			} catch (InterruptedException ignore) {
 			}
 		}
+
 		return this;
 	}
 
@@ -297,61 +365,111 @@ public class Camera implements Cloneable {
 		Color color = Color.BLACK;
 		Ray ray = constructRay(nX, nY, pixelX, pixelY);
 
-		// check for depth of field and anti aliasing
-		if (numOfRays > 1 && !isZero(aperture) && !isZero(focusDistance)) {
+		if (adaptiveGridDepth != 0 && !isZero(aperture) && !isZero(focusDistance)) // super sampiling
+		{
 			double cosA = vTo.dotProduct(ray.getDirection());
 			double dij = focusDistance / cosA;
-			
 			Point focalPoint = p0.add(ray.getDirection().scale(dij));
-			List<Point> apperturePoints = constructBeamPoints(aperture, numOfRays);
-			
-			// second ray for each point in apperture
+
+			int fullGridSize = (int) Math.pow(2, adaptiveGridDepth) + 1;
+			blackboard = new Blackboard(fullGridSize, fullGridSize, p0, vRight, vUp, aperture * 2 + 1,
+					aperture * 2 + 1);
+
+			Point leftUp = blackboard.gridMethod(0, 0);
+			Color leftUpColor = this.rayTracer.traceRay(new Ray(leftUp, focalPoint.subtract(leftUp)));
+
+			Point rightUp = blackboard.gridMethod(0, fullGridSize - 1);
+			Color rightUpColor = this.rayTracer.traceRay(new Ray(rightUp, focalPoint.subtract(rightUp)));
+
+			Point leftDown = blackboard.gridMethod(fullGridSize - 1, 0);
+			Color leftDownColor = this.rayTracer.traceRay(new Ray(leftDown, focalPoint.subtract(leftDown)));
+
+			Point rightDown = blackboard.gridMethod(fullGridSize - 1, fullGridSize - 1);
+			Color rightDownColor = this.rayTracer.traceRay(new Ray(rightDown, focalPoint.subtract(rightDown)));
+
+			color = compareColors(leftDownColor, rightDownColor, leftUpColor, rightUpColor) ? leftDownColor
+					: calcColorRec(new Blackboard.SubPixel(fullGridSize / 2, fullGridSize / 2), focalPoint, leftUpColor,
+							rightUpColor, leftDownColor, rightDownColor, 1, blackboard);
+
+		} else if (numOfRays > 1 && !isZero(aperture) && !isZero(focusDistance)) {
+			double cosA = vTo.dotProduct(ray.getDirection());
+			double dij = focusDistance / cosA;
+			Point focalPoint = p0.add(ray.getDirection().scale(dij));
+
+			// apperturePoints = constructBeamPoints(aperture, numOfRays);
+			blackboard = new Blackboard(numOfRays, numOfRays, p0, vRight, vUp, aperture * 2 + 1, aperture * 2 + 1);
+			apperturePoints = blackboard.generateJitterdPoint().points;
 			for (var sourcePoint : apperturePoints) {
 				Ray secondaryRay = new Ray(sourcePoint, focalPoint.subtract(sourcePoint));
 				color = color.add(rayTracer.traceRay(secondaryRay));
 			}
-			color = color.reduce(apperturePoints.size());
 
-		} else
-			// regullar ray (no depth quality)
+			color = color.reduce(numOfRays * numOfRays);
+		} else {
 			color = rayTracer.traceRay(ray);
+		}
 
 		imageWriter.writePixel(pixelX, pixelY, color);
-
+		pixelManager.pixelDone();
 	}
 
 	/**
-	 * Constructs a list of random points within the aperture for depth of field
-	 * effects.
+	 * a recursive method that calculates the color of a pixel using adaptive
+	 * super-sampling
 	 * 
-	 * @param radius   the radius of the aperture
-	 * @param gridSize the number of points to generate
-	 * @return a list of random points within the aperture
+	 * @param pixelCenter    indices of the center pixel
+	 * @param focalPoint     the head of the ray to the center of the pixel
+	 * @param leftUpColor
+	 * @param rightUpColor
+	 * @param leftDownColor
+	 * @param rightDownColor
+	 * @param level          level of recursion. after going past the level the
+	 *                       recursion quits
+	 * @param blackboard     the blackboard for the pixel
+	 * @return the color of the pixel
 	 */
-	private List<Point> constructBeamPoints(double radius, int gridSize) {
-		List<Point> beamPoints = new LinkedList<>();
-		
-		// size for aperture
-		double windowSize = radius * 2;
-		double gridStep = windowSize / gridSize;
-		
-		
-		Point p = p0;
-		
-		// creates a grid of points in aperture
-		for (int i = 0; i < gridSize; i++) {
-			for (int j = 0; j < gridSize; j++) {
-				p = p0;
-				p = p.add(vRight.scale(-radius + i * gridStep + random.nextDouble() * gridStep));
-				p = p.add(vUp.scale(-radius + j * gridStep + random.nextDouble() * gridStep));
-				
-				// only if in the radius add to beamPoint
-				if (p0.distance(p) <= radius)
-					beamPoints.add(p);
-			}
-		}
+	private Color calcColorRec(Blackboard.SubPixel pixelCenter, Point focalPoint, Color leftUpColor, Color rightUpColor,
+			Color leftDownColor, Color rightDownColor, int level, Blackboard blackboard) {
 
-		return beamPoints;
+		if (level == adaptiveGridDepth)
+			return leftUpColor.add(rightUpColor, leftDownColor, rightDownColor).reduce(4);
+
+		int gridStep = (int) (Math.pow(2, adaptiveGridDepth - level));
+
+		Point left = blackboard.gridMethod(pixelCenter.j - gridStep, pixelCenter.i);
+		Color leftColor = this.rayTracer.traceRay(new Ray(left, focalPoint.subtract(left)));
+
+		Point up = blackboard.gridMethod(pixelCenter.j, pixelCenter.i - gridStep);
+		Color upColor = this.rayTracer.traceRay(new Ray(up, focalPoint.subtract(up)));
+
+		Point down = blackboard.gridMethod(pixelCenter.j, pixelCenter.i + gridStep);
+		Color downColor = this.rayTracer.traceRay(new Ray(down, focalPoint.subtract(down)));
+
+		Point right = blackboard.gridMethod(pixelCenter.j + gridStep, pixelCenter.i);
+		Color rightColor = this.rayTracer.traceRay(new Ray(right, focalPoint.subtract(right)));
+
+		Point center = blackboard.gridMethod(pixelCenter.j, pixelCenter.i);
+		Color centerColor = this.rayTracer.traceRay(new Ray(center, focalPoint.subtract(center)));
+
+		int halfGridStep = gridStep / 2;
+
+		Color leftUpSquareColor = compareColors(leftUpColor, upColor, leftColor, centerColor) ? leftUpColor
+				: calcColorRec(new Blackboard.SubPixel(pixelCenter.j - halfGridStep, pixelCenter.i - halfGridStep),
+						focalPoint, leftUpColor, upColor, leftColor, centerColor, level + 1, blackboard);
+
+		Color rightUpSquareColor = compareColors(upColor, rightUpColor, centerColor, rightColor) ? upColor
+				: calcColorRec(new Blackboard.SubPixel(pixelCenter.j + halfGridStep, pixelCenter.i - halfGridStep),
+						focalPoint, upColor, rightUpColor, centerColor, rightColor, level + 1, blackboard);
+
+		Color leftDownSquareColor = compareColors(leftColor, centerColor, leftDownColor, downColor) ? leftColor
+				: calcColorRec(new Blackboard.SubPixel(pixelCenter.j - halfGridStep, pixelCenter.i + halfGridStep),
+						focalPoint, leftColor, centerColor, leftDownColor, downColor, level + 1, blackboard);
+
+		Color rightDownSquareColor = compareColors(centerColor, rightColor, downColor, rightDownColor) ? centerColor
+				: calcColorRec(new Blackboard.SubPixel(pixelCenter.j + halfGridStep, pixelCenter.i + halfGridStep),
+						focalPoint, centerColor, rightColor, downColor, rightDownColor, level + 1, blackboard);
+
+		return leftUpSquareColor.add(rightUpSquareColor, leftDownSquareColor, rightDownSquareColor).reduce(4);
 	}
 
 	/**
@@ -472,6 +590,27 @@ public class Camera implements Cloneable {
 		}
 
 		/**
+		 * set method for multithreading
+		 * 
+		 * @param i number of threads
+		 * @return This Builder instance for method chaining.
+		 */
+		public Builder setMultithreading(int i) {
+			camera.threadsCount = i;
+			return this;
+		}
+		/**
+		 * Sets the debug print interval for the camera.
+		 * 
+		 * @param d the interval at which to print debug information
+		 * @return This Builder instance for method chaining.
+		 */
+		public Builder setDebugPrint(double d) {
+		    camera.printInterval = d;
+		    return this;
+		}
+
+		/**
 		 * Sets the image writer for the camera.
 		 * 
 		 * @param imageWriter the image writer
@@ -494,6 +633,17 @@ public class Camera implements Cloneable {
 		}
 
 		/**
+		 * set method for adaptiveGridDepth
+		 * 
+		 * @param adaptiveGrid the parameter
+		 * @return This Builder instance for method chaining.
+		 */
+		public Builder setAdaptiveGrid(int adaptiveGrid) {
+			Camera.adaptiveGridDepth = adaptiveGrid;
+			return this;
+		}
+
+		/**
 		 * Builds and returns the Camera instance.
 		 * 
 		 * @return a Camera instance
@@ -505,7 +655,7 @@ public class Camera implements Cloneable {
 					|| camera.distance <= 0)
 				throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "");
 
-			if (camera.imageWriter == null || camera.rayTracer == null)
+			if (camera.imageWriter == null || this.camera.rayTracer == null)
 				throw new MissingResourceException("Missing ImageWriter or RayTracer", Camera.class.getName(), "");
 
 			try {

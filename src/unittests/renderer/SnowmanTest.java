@@ -11,7 +11,7 @@ import scene.Scene;
 /**
  * Tests for reflection and transparency functionality, test for partial shadows
  */
-public class SceneTests {
+public class SnowmanTest {
 	/** Scene for the tests */
 	private final Scene scene = new Scene("Test scene");
 
@@ -23,38 +23,40 @@ public class SceneTests {
 
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-			.setNumOfRays(6)
-			.setAperture(0.2)
-			.setFocusDistance(900)
-			.setRayTracer(new SimpleRayTracer(scene));
+			// .setNumOfRays(8) //MP1
+			.setAdaptiveGrid(2) // MP2
+
+			.setAperture(5).setFocusDistance(800).setRayTracer(new SimpleRayTracer(scene));
 
 	/** Produce a picture of a snowman */
 	@Test
 	public void snowman() {
 		// Snowman Body
-		scene.geometries.add(new Sphere(new Point(0, -60, -100), 50d).setEmission(new Color(169, 169, 169)) // Bottom sphere
+		scene.geometries.add(new Sphere(new Point(0, -60, 400), 50d).setEmission(new Color(169, 169, 169)) // Bottom
+																											// sphere
 				.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)),
-				new Sphere(new Point(0, 10, -100), 35d).setEmission(new Color(169, 169, 169)) // Middle sphere
+				new Sphere(new Point(0, 10, 400), 35d).setEmission(new Color(169, 169, 169)) // Middle sphere
 						.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)),
-				new Sphere(new Point(0, 65, -100), 25d).setEmission(new Color(169, 169, 169)) // Top sphere
+				new Sphere(new Point(0, 65, 400), 25d).setEmission(new Color(169, 169, 169)) // Top sphere
 						.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)));
 
 		// Snowman Eyes
-		scene.geometries.add(new Sphere(new Point(-10, 70, -75), 2d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(10, 70, -75), 2d).setEmission(new Color(0, 0, 0)));
+		scene.geometries.add(new Sphere(new Point(-10, 70, -75 + 500), 2d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(10, 70, -75 + 500), 2d).setEmission(new Color(0, 0, 0)));
 
 		// Snowman Nose
-		scene.geometries.add(new Triangle(new Point(0, 65, -50), new Point(0, 65, -130), new Point(25, 65, -90))
-				.setEmission(new Color(255, 165, 0))
-				.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)));
+		scene.geometries.add(
+				new Triangle(new Point(0, 65, -50 + 500), new Point(0, 65, -130 + 500), new Point(25, 65, -90 + 500))
+						.setEmission(new Color(255, 165, 0))
+						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)));
 
 		// Snowman Buttons
 		scene.geometries.add(
-				new Sphere(new Point(0, -20, -63), 3d).setEmission(new Color(139, 69, 19))
+				new Sphere(new Point(0, -20, -63 + 500), 3d).setEmission(new Color(139, 69, 19))
 						.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)),
-				new Sphere(new Point(0, 0, -65), 3d).setEmission(new Color(139, 69, 19))
+				new Sphere(new Point(0, 0, -65 + 500), 3d).setEmission(new Color(139, 69, 19))
 						.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)),
-				new Sphere(new Point(0, 20, -62), 3d).setEmission(new Color(139, 69, 19))
+				new Sphere(new Point(0, 20, -62 + 500), 3d).setEmission(new Color(139, 69, 19))
 						.setMaterial(new Material().setKd(0.4).setKs(0.6).setShininess(300)));
 
 		// Ice Lake
@@ -63,13 +65,13 @@ public class SceneTests {
 				.setMaterial(new Material().setKd(0.1).setKs(0.9).setShininess(300).setKr(new Double3(0.7, 0.7, 0.7))));
 
 		// Snowman Smile
-		scene.geometries.add(new Sphere(new Point(-12, 55, -80), 1d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(-8, 52, -80), 1d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(-4, 50, -80), 1d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(0, 49, -80), 1d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(4, 50, -80), 1d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(8, 52, -80), 1d).setEmission(new Color(0, 0, 0)),
-				new Sphere(new Point(12, 55, -80), 1d).setEmission(new Color(0, 0, 0)));
+		scene.geometries.add(new Sphere(new Point(-12, 55, -80 + 500), 1d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(-8, 52, -80 + 500), 1d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(-4, 50, -80 + 500), 1d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(0, 49, -80 + 500), 1d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(4, 50, -80 + 500), 1d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(8, 52, -80 + 500), 1d).setEmission(new Color(0, 0, 0)),
+				new Sphere(new Point(12, 55, -80 + 500), 1d).setEmission(new Color(0, 0, 0)));
 
 		// Snowflakes
 		int numSnowflakes = 100;
@@ -89,8 +91,7 @@ public class SceneTests {
 
 		// Sunlight light source
 		scene.lights.add(new DirectionalLight(new Color(255, 200, 0), new Vector(0.5, -0.5, -0.5)));
-		
-		
+
 		// Trees
 		// First tree
 		scene.geometries.add(new Triangle(new Point(50, 27, -249), new Point(72.5, 62.5, -249), new Point(95, 35, -249))
@@ -272,10 +273,11 @@ public class SceneTests {
 
 		scene.setBackground(new Color(135, 206, 235));
 
-		ImageWriter imageWriter = new ImageWriter("snowman", 800, 1000);
+		ImageWriter imageWriter = new ImageWriter("snowmanfocal", 1000, 1000);
 
-		cameraBuilder.setLocation(new Point(0, 0, 800)).setVpDistance(1000).setVpSize(500, 500)
-				.setImageWriter(imageWriter).build().renderImage().writeToImage();
+		cameraBuilder.setLocation(new Point(0, 0, 1200)).setVpDistance(1000).setVpSize(500, 500)
+				.setImageWriter(imageWriter).setDebugPrint(0.5).setMultithreading(5).build().renderImage()
+				.writeToImage();
 
 	}
 
