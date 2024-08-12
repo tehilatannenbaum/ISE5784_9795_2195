@@ -5,6 +5,7 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Color;
 import java.util.*;
+import static java.lang.Math.*;
 
 import static primitives.Util.*;
 
@@ -13,10 +14,7 @@ import static primitives.Util.*;
  * a view plane for rendering scenes.
  */
 public class Camera implements Cloneable {
-	
-	
-	
-	
+
 	// Existing fields
 	/** Camera's position in 3D space. */
 	private Point p0;
@@ -79,31 +77,32 @@ public class Camera implements Cloneable {
 	 * Ray tracer for rendering the scene.
 	 */
 	private RayTracerBase rayTracer;
-	
+
 	// super sampling and multi thread
-	
+
 	/**
-	 *  List of points representing the aperture positions for depth of field effects. 
+	 * List of points representing the aperture positions for depth of field
+	 * effects.
 	 */
 	static List<Point> apperturePoints;
-	
-	/** 
-	 * the number of threads, or other code operations 
+
+	/**
+	 * the number of threads, or other code operations
 	 */
 	private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
 
-	/** 
-	 * progress percentage 
+	/**
+	 * progress percentage
 	 */
 	private double printInterval = 0; // printing progress percentage interval
 
-	/** 
-	 * Manages the pixels and their rendering for the image. 
-	*/
+	/**
+	 * Manages the pixels and their rendering for the image.
+	 */
 	private PixelManager pixelManager;
 
-	/** 
-	 * A static instance of the Blackboard used for managing shared resources. 
+	/**
+	 * A static instance of the Blackboard used for managing shared resources.
 	 */
 	private static Blackboard blackboard;
 
@@ -314,30 +313,32 @@ public class Camera implements Cloneable {
 	}
 
 	public Camera renderImage() {
-		// IMAGE RENDERING
-		// Pass a ray from the camera through each pixel in the view plane and set the color
+		// Pass a ray from the camera through each pixel in the view plane and set the
+		// color
 		int nY = this.imageWriter.getNy();
 		int nX = this.imageWriter.getNx();
 		pixelManager = new PixelManager(nY, nX, printInterval);
 
+		// single thread
 		if (threadsCount == 0) {
 			for (int i = 0; i < nY; i++) {
 				for (int j = 0; j < nX; j++) {
 					castRays(nX, nY, i, j);
 				}
 			}
-		} else { 
-			var threads = new LinkedList<Thread>(); 
-			while (threadsCount-- > 0) 
+		} else {
+			// multi thread
+			var threads = new LinkedList<Thread>();
+			while (threadsCount-- > 0)
 				threads.add(new Thread(() -> {
 					// current pixel(row,col)
-					PixelManager.Pixel pixel; 
+					PixelManager.Pixel pixel;
 					// allocate pixel(row,col) in loop until there are no more pixels
 					while ((pixel = pixelManager.nextPixel()) != null)
 						// cast ray through pixel (and color it – inside castRays)
 						castRays(nX, nY, pixel.col(), pixel.row());
 				}));
-			
+
 			// start all the threads
 			for (var thread : threads)
 				thread.start();
@@ -365,13 +366,14 @@ public class Camera implements Cloneable {
 		Color color = Color.BLACK;
 		Ray ray = constructRay(nX, nY, pixelX, pixelY);
 
-		if (adaptiveGridDepth != 0 && !isZero(aperture) && !isZero(focusDistance)) // super sampiling
-		{
+		// Adaptive Super Sampling
+		if (adaptiveGridDepth != 0 && !isZero(aperture) && !isZero(focusDistance)) {
+
 			double cosA = vTo.dotProduct(ray.getDirection());
 			double dij = focusDistance / cosA;
 			Point focalPoint = p0.add(ray.getDirection().scale(dij));
 
-			int fullGridSize = (int) Math.pow(2, adaptiveGridDepth) + 1;
+			int fullGridSize = (int) pow(2, adaptiveGridDepth) + 1;
 			blackboard = new Blackboard(fullGridSize, fullGridSize, p0, vRight, vUp, aperture * 2 + 1,
 					aperture * 2 + 1);
 
@@ -387,11 +389,14 @@ public class Camera implements Cloneable {
 			Point rightDown = blackboard.gridMethod(fullGridSize - 1, fullGridSize - 1);
 			Color rightDownColor = this.rayTracer.traceRay(new Ray(rightDown, focalPoint.subtract(rightDown)));
 
+			// if colors are the same return color else recursive calcColor of a zoomed area
 			color = compareColors(leftDownColor, rightDownColor, leftUpColor, rightUpColor) ? leftDownColor
 					: calcColorRec(new Blackboard.SubPixel(fullGridSize / 2, fullGridSize / 2), focalPoint, leftUpColor,
 							rightUpColor, leftDownColor, rightDownColor, 1, blackboard);
 
+			// Depth of Field
 		} else if (numOfRays > 1 && !isZero(aperture) && !isZero(focusDistance)) {
+
 			double cosA = vTo.dotProduct(ray.getDirection());
 			double dij = focusDistance / cosA;
 			Point focalPoint = p0.add(ray.getDirection().scale(dij));
@@ -399,12 +404,14 @@ public class Camera implements Cloneable {
 			// apperturePoints = constructBeamPoints(aperture, numOfRays);
 			blackboard = new Blackboard(numOfRays, numOfRays, p0, vRight, vUp, aperture * 2 + 1, aperture * 2 + 1);
 			apperturePoints = blackboard.generateJitterdPoint().points;
+
 			for (var sourcePoint : apperturePoints) {
 				Ray secondaryRay = new Ray(sourcePoint, focalPoint.subtract(sourcePoint));
 				color = color.add(rayTracer.traceRay(secondaryRay));
 			}
 
 			color = color.reduce(numOfRays * numOfRays);
+
 		} else {
 			color = rayTracer.traceRay(ray);
 		}
@@ -431,10 +438,11 @@ public class Camera implements Cloneable {
 	private Color calcColorRec(Blackboard.SubPixel pixelCenter, Point focalPoint, Color leftUpColor, Color rightUpColor,
 			Color leftDownColor, Color rightDownColor, int level, Blackboard blackboard) {
 
+		// Recursive method for adaptive super sampling
 		if (level == adaptiveGridDepth)
 			return leftUpColor.add(rightUpColor, leftDownColor, rightDownColor).reduce(4);
 
-		int gridStep = (int) (Math.pow(2, adaptiveGridDepth - level));
+		int gridStep = (int) (pow(2, adaptiveGridDepth - level));
 
 		Point left = blackboard.gridMethod(pixelCenter.j - gridStep, pixelCenter.i);
 		Color leftColor = this.rayTracer.traceRay(new Ray(left, focalPoint.subtract(left)));
@@ -599,6 +607,7 @@ public class Camera implements Cloneable {
 			camera.threadsCount = i;
 			return this;
 		}
+
 		/**
 		 * Sets the debug print interval for the camera.
 		 * 
@@ -606,8 +615,8 @@ public class Camera implements Cloneable {
 		 * @return This Builder instance for method chaining.
 		 */
 		public Builder setDebugPrint(double d) {
-		    camera.printInterval = d;
-		    return this;
+			camera.printInterval = d;
+			return this;
 		}
 
 		/**

@@ -26,7 +26,7 @@ public class Blackboard {
 	private int nY;
 
 	/** Center point of the blackboard */
-	private Point centerOfBlackB;
+	private Point centerOfBoard;
 
 	/** X-axis vector */
 	private Vector axisX;
@@ -52,7 +52,7 @@ public class Blackboard {
 	 * @return The number of pixels along the x-axis (width) of the view plane.
 	 */
 	public int getNx() {
-	    return nX;
+		return nX;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Blackboard {
 	 * @return The number of pixels along the y-axis (height) of the view plane.
 	 */
 	public int getNy() {
-	    return nY;
+		return nY;
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Blackboard {
 	 */
 	public Blackboard(int numX, int numY, Point centerPoint, Vector axisx, Vector axisy, double width, double height) {
 		if (centerPoint != null)
-			this.centerOfBlackB = centerPoint;
+			this.centerOfBoard = centerPoint;
 		this.nX = numX;
 		this.nY = numY;
 		this.axisX = axisx;
@@ -98,7 +98,7 @@ public class Blackboard {
 	 * @return The updated Blackboard object
 	 */
 	public Blackboard setCenterPoint(Point pt) {
-		this.centerOfBlackB = pt;
+		this.centerOfBoard = pt;
 		return this;
 	}
 
@@ -132,7 +132,7 @@ public class Blackboard {
 	 * @return The center point of the blackboard
 	 */
 	public Point getCenterPoint() {
-		return centerOfBlackB;
+		return centerOfBoard;
 	}
 
 	/**
@@ -142,14 +142,14 @@ public class Blackboard {
 	 * @param i Index along the Y-axis
 	 * @return The calculated point on the blackboard grid
 	 */
-	public Point gridMethod( int j, int i) {
+	public Point gridMethod(int j, int i) {
 		double stepX = (width - 1) / nX;
 		double stepY = (height - 1) / nY;
 
 		double xj = ((j * stepX) - ((width - 1) / 2)) + (stepX / 2);
 		double yi = ((-i * stepY) + ((height - 1) / 2)) - (stepY / 2);
 
-		Point pIJ = centerOfBlackB;
+		Point pIJ = centerOfBoard;
 		if (!isZero(xj))
 			pIJ = pIJ.add(axisX.scale(xj));
 		if (!isZero(yi))
@@ -183,21 +183,21 @@ public class Blackboard {
 	 * a sub class for representing a single sub-pixel inside the pixel. a PDS
 	 */
 	public static class SubPixel {
-	    /** The column index of the sub-pixel within the pixel. */
-	    public int j;
-	    
-	    /** The row index of the sub-pixel within the pixel. */
-	    public int i;
+		/** The column index of the sub-pixel within the pixel. */
+		public int j;
 
-	    /**
-	     * Constructs a SubPixel with the specified column and row indices.
-	     *
-	     * @param j The column index of the sub-pixel.
-	     * @param i The row index of the sub-pixel.
-	     */
-	    public SubPixel(int j, int i) {
-	        this.j = j;
-	        this.i = i;
-	    }
+		/** The row index of the sub-pixel within the pixel. */
+		public int i;
+
+		/**
+		 * Constructs a SubPixel with the specified column and row indices.
+		 *
+		 * @param j The column index of the sub-pixel.
+		 * @param i The row index of the sub-pixel.
+		 */
+		public SubPixel(int j, int i) {
+			this.j = j;
+			this.i = i;
+		}
 	}
 }

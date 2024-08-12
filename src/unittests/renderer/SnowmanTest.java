@@ -23,10 +23,14 @@ public class SnowmanTest {
 
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-			// .setNumOfRays(8) //MP1
-			.setAdaptiveGrid(2) // MP2
 
-			.setAperture(5).setFocusDistance(800).setRayTracer(new SimpleRayTracer(scene));
+			// MP1 depth of field
+			.setNumOfRays(8).setAperture(3).setFocusDistance(800)
+
+			// MP2 Adaptive Super Sampling
+			.setAdaptiveGrid(2)
+
+			.setRayTracer(new SimpleRayTracer(scene));
 
 	/** Produce a picture of a snowman */
 	@Test
@@ -85,12 +89,23 @@ public class SnowmanTest {
 					.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(10)));
 		}
 
-		// Lights
-		scene.lights.add(new SpotLight(new Color(700, 700, 1000), new Point(200, 200, 500), new Vector(-1, -1, -2))
-				.setKl(0.0004).setKq(0.0000006));
+		// Snowman Lights
+		scene.lights.add(new SpotLight(new Color(500, 500, 800), new Point(200, 200, 500), new Vector(-1, -1, -1.5))
+				.setKl(0.0005).setKq(0.0000005));
 
-		// Sunlight light source
-		scene.lights.add(new DirectionalLight(new Color(255, 200, 0), new Vector(0.5, -0.5, -0.5)));
+		// Sunlight Directional Light Source
+		scene.lights.add(new DirectionalLight(new Color(255, 200, 100), new Vector(0.5, -0.5, -0.5)));
+
+		// Point Light to enhance illumination around the snowman
+		scene.lights.add(new PointLight(new Color(400, 400, 600), new Point(-100, 20, 300)).setKl(0.001).setKq(0.0001));
+
+		// Ambient Light to provide overall illumination
+		AmbientLight ambientLight = new AmbientLight(new Color(100, 100, 150), 0.2);
+		scene.setAmbientLight(ambientLight);
+
+		// Additional Spot Light to add emphasis
+		scene.lights.add(new SpotLight(new Color(600, 600, 900), new Point(100, 100, 600), new Vector(-1, -1, -1))
+				.setKl(0.0005).setKq(0.0000005));
 
 		// Trees
 		// First tree
@@ -240,34 +255,6 @@ public class SnowmanTest {
 						.setEmission(new Color(0, 100, 0))
 						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
 				new Triangle(new Point(-265, -30, -350), new Point(-160, -30, -350), new Point(-240, -35, -310))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)));
-
-		// Fifth tree
-		scene.geometries.add(new Triangle(new Point(200, 10, -50), new Point(230, 60, -50), new Point(270, 30, -50))
-				.setEmission(new Color(0, 100, 0)).setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(200, 10, -50), new Point(230, 60, -50), new Point(215, 30, -10))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(200, 10, -50), new Point(270, 30, -50), new Point(215, 30, -10))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(195, -10, -50), new Point(230, 50, -50), new Point(275, 0, -50))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(195, -10, -50), new Point(230, 50, -50), new Point(240, -10, -10))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(195, -10, -50), new Point(275, 0, -50), new Point(240, -10, -10))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(190, -30, -50), new Point(230, 30, -50), new Point(280, -30, -50))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(190, -30, -50), new Point(230, 30, -50), new Point(245, -35, -10))
-						.setEmission(new Color(0, 100, 0))
-						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-				new Triangle(new Point(190, -30, -50), new Point(280, -30, -50), new Point(245, -35, -10))
 						.setEmission(new Color(0, 100, 0))
 						.setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)));
 
